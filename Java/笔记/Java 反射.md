@@ -1,8 +1,8 @@
 # Java 反射
----
+
 
 ## Java 内存模型
-![Alt text](./image.jpg)
+![](https://ws3.sinaimg.cn/large/006tNbRwly1fwqgr8cbrnj30ly0cqab1.jpg)
 
 ## 什么是JVM
 

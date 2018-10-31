@@ -1,5 +1,4 @@
 ## Context 都没弄明白，还怎么做 Android 开发？
---- 
 
 > Activity mActivity =new Activity()
 

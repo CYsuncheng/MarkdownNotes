@@ -1,5 +1,4 @@
 # Android RecyclerView 
----
 
 ## RecyclerView 简介
 

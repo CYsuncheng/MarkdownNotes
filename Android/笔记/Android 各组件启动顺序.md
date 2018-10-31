@@ -1,5 +1,4 @@
 ## Android 各组件启动顺序
----
 
 ### 结论：
 1. Application 的 attachBaseContext 方法是优先执行的；

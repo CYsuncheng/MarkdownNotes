@@ -1,5 +1,4 @@
 # Android App 启动时间
----
 
 ### 方法一：adb shell am start
 

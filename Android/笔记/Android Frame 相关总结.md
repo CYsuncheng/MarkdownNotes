@@ -1,7 +1,4 @@
 ## Android Frame 相关总结
----
-
-[TOC]
 
 ### **ANR**
 #### 原因：

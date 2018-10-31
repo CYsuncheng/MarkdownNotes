@@ -1,5 +1,6 @@
 
 ## 启动 App 为 debug mode
+
 > adb shell am set-debug-app -w com.changba
 
 其中：

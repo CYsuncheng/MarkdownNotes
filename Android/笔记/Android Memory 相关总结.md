@@ -1,7 +1,4 @@
 ## Android Memory 相关总结
----
-
-[TOC]
 
 #### 内存泄漏
 **简单的说，就是new出来的Object 放在Heap上无法被GC回收。**

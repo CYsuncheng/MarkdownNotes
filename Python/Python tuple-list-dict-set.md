@@ -3,7 +3,6 @@
 ## 元组
 > 可以包含不同类型的对象，但是是不可变的，不可以在增减元素，用()来定义.
 
-元组的操作: `tuple(obj),切片,in,for in,del,cmp,len,max,min`
 ``` python
 #定义一个元组
 tuple1 =()
@@ -32,9 +31,6 @@ print len(tuple1)
 ## 列表
 > 列表是Python中最具灵活性的有序集合对象类型,与字符串不同的是,列表可以包含任何种类的对象:数字,字符串,甚至是其他列表.并且列表都是可变对象,它支持在原处修改的操作.也可以通过指定的索引和分片获取元素.列表就可元组的可变版本，用[]来定义.
 
-列表的操作: `list(obj),切片,in,for in,del,cmp,len,max,min`
-额外的操作:
-`list.append(),list.insert(index,obj),list.extend(seq),list.remove(obj),list.pop(index=-1),list.count(obj),sorted(list),reversed(list),list.index(obj)`
 ``` python
 #定义一个列表
 listA = ['a', 'b', 'c', 1, 2]
@@ -89,9 +85,6 @@ print item
 ## 字典
 > 字典(Dictionary) 是 Python 的内置数据类型之一，它定义了键和值之间一对一的关系,但它们是以无序的方式储存的。定义 Dictionary 使用一对大(花)括号” { } ”。
 
-字典的操作: `dict(obj),in,for key in dict,del,cmp,len,max,min`
-额外的操作:
-`dict[key],dict.keys(),dict.fromkeys(seq,value),dict.has_key(key),dict.get(key,default),dict.items(),dict.values():,dict.update(dict2),dict.pop(key),dict.setdefault(key ,defaultvalue),dict.clear(),dict.copy()`
 ``` python
 # 定义一个字典
 # Dictionary 不只是用于存储字符串。Dictionary 的值可以是任意数据类型，

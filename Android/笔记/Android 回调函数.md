@@ -1,6 +1,6 @@
-在Android的学习过程中经常会听到或者见到“回调”这个词，那么什么是回调呢？所谓的回调函数就是：在A类中定义了一个方法，这个方法中用到了一个接口和该接口中的抽象方法，但是抽象方法没有具体的实现，需要B类去实现，B类实现该方法后，它本身不会去调用该方法，而是传递给A类，供A类去调用，这种机制就称为回调。
+> 所谓的回调函数就是：在A类中定义了一个方法，这个方法中用到了一个接口和该接口中的抽象方法，但是抽象方法没有具体的实现，需要B类去实现，B类实现该方法后，它本身不会去调用该方法，而是传递给A类，供A类去调用，这种机制就称为回调。
 
-这么说可能还是有些模模糊糊，接下来我们用类比的方法一步步来看到底该怎么写一个回调函数，因为android回调中最常见的是Button的点击事件的回调，这里以此为参照：
+因为android回调中最常见的是Button的点击事件的回调，这里以此为参照：
 
 1、在A类中定义一个接口：需要我们在类中定义出一个接口，并且给这个接口定义出一个抽象方法，就像下面这样：
 
@@ -8,7 +8,11 @@
 public interface CallBack{
         public abstract void work()
     }
-    以下是View.java类中定义的响应点击事件的接口：
+```
+
+以下是View.java类中定义的响应点击事件的接口：
+
+``` java
     /**
      * Interface definition for a callback to be invoked when a view is clicked.
      */
@@ -47,7 +51,7 @@ public void setCallBack(CallBack callBack) {
 }
 ```
 
-这里看英文注释也看得出来是什么意思，是不是想到了我们平常使用setOnClickListener(OnClickListener l)的时候呢:
+以下是 setOnClickListener(OnClickListener l) 的源码：
 
 ```java
 /**
@@ -66,7 +70,7 @@ public void setOnClickListener(@Nullable OnClickListener l) {
 }
 ```
 
-最后一步，如果说前面的都没问题，但这一步可能更不好理解了，不过没关系，我们先看一下
+最后一步
 
 4、在A类中调用接口对象中的方法：
 
@@ -145,13 +149,12 @@ public class Boss {
 }  
 ```
 
-如果第一眼看不明白，我们附上我们最常用的Button点击事件的处理的代码，这里Employee 类类比一下就是View类：
+我们附上我们最常用的Button点击事件的处理的代码：
 
 ```java
 public class TestCallBack{
     private Button button;
     button.setOnClickListener(new OnClickListener() {
-        
         @Override
         public void onClick(View v) {
            //做一些操作
@@ -162,11 +165,7 @@ public class TestCallBack{
 }
 ```
 
-这时候我们在再回头关于回调的定义：
-在A类中定义了一个方法，这个方法中用到了一个接口和该接口中的抽象方法，但是抽象方法没有具体的实现，需要B类去实现，B类实现该方法后，它本身不会去调用该方法，而是传递给A类，供A类去调用
-
-这里回到我们的代码中就是：
-我们在Employee(View)类中定义了一个接口，接口当中还含有一个抽象方法，这个抽象方法没有具体的实现，当我们需要时候自己去实现这个方法，比如这里的Boss (Button)类，这句话可能难以理解：B类实现该方法后，它本身不会去调用该方法，而是传递给A类，供A类去调用，有些人会想，诶，在onClick()方法中我不是写了具体的实现嘛，其实真的是这样吗，我们接着往下看，我们就来好好的分析一下这个Button点击事件。
+我们接着往下看，我们就来好好的分析一下这个Button点击事件。
 
 首先，在View类中我们能找到setOnClickListener(OnClickListener l)方法：
 
@@ -194,8 +193,7 @@ public boolean performClick() {
 }
 ```
 
-对此我们的解释是：在父类中我们要用到onClick()方法，但是父类却没有去实现该方法，而是定义了一个方法setOnClickListener(OnClickListener l)，如果子类想要自己能够响应点击事件，则它就必须重写父类的该方法，实现OnClickListener接口和它的onClick()方法。在子类实现该接口和方法后，将其通过参数传递给父类，在父类中执行onClick()方法。那么我们是如何运行到这个OnClick()函数的呢，这里由于涉及到View的事件分发机制不细说，想了解的话网上有很多资料，这里只给出结论，因为我们在TestCallBack这个类中没有实现OnTouchListener
-这个接口，那么当点击事件发的时候必然会运行到onTouchEvent()
+对此我们的解释是：在父类中我们要用到onClick()方法，但是父类却没有去实现该方法，而是定义了一个方法setOnClickListener(OnClickListener l)，如果子类想要自己能够响应点击事件，则它就必须重写父类的该方法，实现OnClickListener接口和它的onClick()方法。在子类实现该接口和方法后，将其通过参数传递给父类，在父类中执行onClick()方法。那么我们是如何运行到这个OnClick()函数的呢，这里由于涉及到View的事件分发机制不细说，想了解的话网上有很多资料，这里只给出结论，因为我们在TestCallBack这个类中没有实现OnTouchListener，这个接口，那么当点击事件分发的时候必然会运行到onTouchEvent()
 
 这个方法，我们来看一下这个方法：
 
@@ -241,17 +239,74 @@ li.mOnClickListener.onClick(this);//就是这里
 
 这样我们就完整的了解了整个OnClickListener()接口中体现出来的回调机制
 
-总结一下
-为了实现一个回调方法，首先要先定义一个包含了接口的类，并且这个接口中要有一个抽象方法，这个抽象方法的具体实现由其他类来完成(比如我们响应Button的点击事件，onClick()方法里写上当点击事件产生并且该方法被调用时候需要做的操作，比如显示一些文本信息等等)，最后该方法的回调是之前的包含有抽象方法的那个接口所在的类去调用的，比如说onClick()方法是当点击事件产生之后经过一系列的事件分发在View类中被调用的。
+回掉的写法和结构大概清楚了，那B类如何告诉A类调用自己的方法的呢？
+在Android中，涉及到了事件传递的机制，下面简单说明：
 
-这其中的奥秘就是：
-回调其实是一种双向调用模式，也就说调用方在接口被调用时也会调用对方的接口，实现方法交还给提供接口的父类处理！
+``` java
+public boolean dispatchTouchEvent(MotionEvent event) {
+ 
+        if (mInputEventConsistencyVerifier != null) {
+            mInputEventConsistencyVerifier.onTouchEvent(event, 0);
+        }
+        if (onFilterTouchEventForSecurity(event)) {
+            ListenerInfo li = mListenerInfo;
+            if (li != null && li.mOnTouchListener != null 
+                    && (mViewFlags & ENABLED_MASK) == ENABLED
+                    && li.mOnTouchListener.onTouch(this, event)) {
+                return true;
+            }
+            if (onTouchEvent(event)) {
+                return true;
+            }
+        }
+        if (mInputEventConsistencyVerifier != null) {
+            mInputEventConsistencyVerifier.onUnhandledEvent(event, 0);
+        }
+        return false;
+}
+```
 
-为什么要用回调
-我们都知道Java是一门面向对象的语言，有一句很著名的话就是”万事万物皆为对象”，我们把普通事物的共性抽取出来，而这些共性之中又充斥着特性，每个不同的特性就需要交给特定的情况处理，通过暴露接口方法可以减少很多重复，代码更加优雅。
+由于我们没有实现OnTouchListener接口，而onTouch()方法的默认返回值为false，所以第一个if语句中的代码不会被执行到，进入第二个if语句中，执行了onTouchEvent()方法。那么我们再来看一下该方法：
 
-打个比方，Button、ImageButton等都具有可被点击的共性，但是被点击之后相关事件的处理是不同的，比如说我想我要点击的这个Button弹出一个消息提示，然而我希望我的ImageButton点击之后可以弹出一个Notifaction通知，这个时候回调方法的好处就体现出来了，因为android对外暴露的OnClickListener()接口中含有一个OnClick()方法，你需要怎样的具体实现都由你自己定义，而这个回调方法的所在类View不会管你怎么实现的，它只负责调用这个回调方法，这就是使用回调的好处。
+``` java
+public boolean onTouchEvent(MotionEvent event) {
+    // 略去无用代码...
+    if (((viewFlags & CLICKABLE) == CLICKABLE || (viewFlags & LONG_CLICKABLE) == LONG_CLICKABLE)) {
+         switch (event.getAction()) {
+              case MotionEvent.ACTION_UP:
+			// 略去无用代码...
+				    if (!mHasPerformedLongPress) { 
+					// This is a tap, so remove the longpress check removeLongPressCallback(); 
+					// Only perform take click actions if we were in the pressed state 
+					if (!focusTaken) { 
+						// Use a Runnable and post this rather than calling 
+						// performClick directly. This lets other visual state 
+						// of the view update before click actions start. 
+						if (mPerformClick == null) { 
+							mPerformClick = new PerformClick(); 
+						} 
+						if (!post(mPerformClick)) {
+							performClick(); 
+						} 
+					} 
+				} 
+				//略去无用代码..
+				break; 
+		} 
+		return true; 
+	} 
+	return false; 
+}
+```
 
-主要参考
+我们只看重点，在ACTION_UP这个case当中，我们找到了关键的代码：
+
+``` java
+if (!post(mPerformClick)) {
+    performClick();
+}
+```
+
+资料：
 [Android中回调函数机制解析](https://blog.csdn.net/devor/article/details/17883427)
 [android中的回调](https://blog.csdn.net/xsf50717/article/details/50520462)

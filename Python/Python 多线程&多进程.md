@@ -48,7 +48,6 @@ def multi_thread():
     for num in list_num:
         t = Thread(target=test, args=[num])
         t_list.append(t)
-    for t in t_list:
         t.start()
     for t in t_list:
         t.join()
@@ -69,7 +68,6 @@ def multi_process():
     for num in list_num:
         p = Process(target=test, args=[num])
         p_list.append(p)
-    for proc in p_list:
         proc.start()
     for proc in p_list:
         proc.join()
@@ -120,6 +118,29 @@ PoolExecutor: 0.769335985184
 ```
 
 这次利用多线程，明显的缩短了任务的时长，这也证明了GIL的确对IO密集型的任务释放了锁。
+
+### Thread 的 join and setDaemon 方法
+`t.join()` 方法的意思是，主线程需要等待子线程运行结束后继续执行，不加这个方法，主线程会继续执行，例如上面的例子，改成这样：
+
+``` python
+def multi_thread():
+    # thread方式
+    t_list = []
+    start = time.time()
+    for num in list_num:
+        t = Thread(target=test, args=[num])
+        t_list.append(t)
+        t.start()
+    spend = time.time() - start
+    print "multi_thread_origin: %s" % spend
+
+# 结果：   
+multi_thread_origin: 0.156303882599
+running running running running stop
+```
+可以看到，主线程直接打印了时间，而此时子线程还在运行中。
+
+`setDaemon()` 的意思是，如果主进程结束，则子进程也会跟着结束，调用需要在`start()`之前,可以自己改一下试试。还有 `apply` 和 `apply_async` 等方法，前者是阻塞的，后者非阻塞。
 
 
 ## 坑

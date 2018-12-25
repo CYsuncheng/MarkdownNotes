@@ -172,3 +172,13 @@ Future 有三个重要的方法：
 ## 遇到的坑
 1. Python 在 Mac 启动多进程，会导致 crash，解决办法是：环境变量添加：`export OBJC_DISABLE_INITIALIZE_FORK_SAFETY=YES`
 2. TypeError: can't pickle cStringIO.StringO objects 看了些 stackoverflow 回复，貌似在python3.4解决了这类问题. 原因是，python 的 multiprocessing pool 进程池隐形的加入了一个任务队列，在你 apply_async 的时候，他会使用 pickle 序列化对象，但是 python 2.x 的pickle 应该是不支持这种模式的序列化。解决方法还不少，但是目前没看懂。。。最简单的就是直接使用Process，不用 ProcessPool。
+3. cpu 核心数问题，例如我的电脑的系统信息显示4核，我以为最多就是可以跑4个进程，但是其实并不是看到的样子，处理器数目：1，核总数：4
+
+``` python
+>>> import multiprocessing
+>>> multiprocessing.cpu_count()
+8
+```
+    
+
+

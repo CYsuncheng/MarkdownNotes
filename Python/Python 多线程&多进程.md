@@ -169,6 +169,137 @@ Future 有三个重要的方法：
 父进程要传递任务给子进程时，先使用pickle将任务对象进行序列化成字节数组，然后将字节数组通过socketpair的写描述符写入内核的buffer中。子进程接下来就可以从buffer中读取到字节数组，然后再使用pickle对字节数组进行反序列化来得到任务对象
 [以上解释出处](https://juejin.im/post/5b1e36476fb9a01e4a6e02e4)
 
+## 锁
+
+### 如何加锁，获取钥匙，释放锁
+
+```python
+import threading
+
+# 生成锁对象，全局唯一
+lock = threading.Lock()
+
+# 获取锁。未获取到会阻塞程序，直到获取到锁才会往下执行
+lock.acquire()
+
+# 释放锁，归回倘，其他人可以拿去用了
+lock.release()
+```
+需要注意，lock.acquire() 和 lock.release() 必须成对出现。否则就有可能造成死锁。
+避免忘记，可以使用 with 关键字
+
+```python
+import threading
+
+lock = threading.Lock()
+with lock:
+    # 这里写自己的代码
+    pass
+```
+
+看例子：
+
+```python
+def job1():
+    global n
+    for i in range(10):
+        n+=1
+        print('job1',n)
+
+def job2():
+    global n
+    for i in range(10):
+        n+=10
+        print('job2',n)
+
+def test_no_lock():
+    global n
+    n = 0
+    t1=threading.Thread(target=job1)
+    t2=threading.Thread(target=job2)
+    t1.start()
+    t2.start()
+
+def job3():
+    global n, lock
+    # 获取锁
+    lock.acquire()
+    for i in range(10):
+        n += 1
+        print('job3', n)
+    lock.release()
+
+
+def job4():
+    global n, lock
+    # 获取锁
+    lock.acquire()
+    for i in range(10):
+        n += 10
+        print('job4', n)
+    lock.release()
+
+def test_lock():
+    global n, lock
+    n = 0
+    # 生成锁对象
+    lock = threading.Lock()
+
+    t1 = threading.Thread(target=job3)
+    t2 = threading.Thread(target=job4)
+    t1.start()
+    t2.start()
+    
+if __name__ == '__main__':
+    test_no_lock()
+    test_lock()
+```
+可以分别看输出，没锁输出时混乱的，加锁之后，就变成了顺序输出了。
+
+### 可重入锁（RLock）
+有时候在同一个线程中，我们可能会多次请求同一资源（就是，获取同一锁钥匙），俗称锁嵌套。
+如果还是按照常规的做法，会造成死锁的。比如，下面这段代码，会发现并没有输出结果。
+
+```python
+import threading
+
+def main():
+    n = 0
+    lock = threading.Lock()
+    with lock:
+        for i in range(10):
+            n += 1
+            with lock:
+                print(n)
+
+t1 = threading.Thread(target=main)
+t1.start()
+```
+threading模块除了提供Lock锁之外，还提供了一种可重入锁RLock，专门来处理这个问题。
+
+```python
+import threading
+
+def main():
+    n = 0
+    # 生成可重入锁对象
+    lock = threading.RLock()
+    with lock:
+        for i in range(10):
+            n += 1
+            with lock:
+                print(n)
+
+t1 = threading.Thread(target=main)
+t1.start(）
+```
+需要注意的是，可重入锁，只在同一线程里，放松对锁钥匙的获取，其他与Lock并无二致。
+
+### 可能死锁：
+> 线程1，嵌套获取A,B两个锁，线程2，嵌套获取B,A两个锁。由于两个线程是交替执行的，是有机会遇到线程1获取到锁A，而未获取到锁B，在同一时刻，线程2获取到锁B，而未获取到锁A。由于锁B已经被线程2获取了，所以线程1就卡在了获取锁B处，由于是嵌套锁，线程1未获取并释放B，是不能释放锁A的，这是导致线程2也获取不到锁A，也卡住了。两个线程，各执一锁，各不让步。造成死锁。
+
+
+
 ## 遇到的坑
 1. Python 在 Mac 启动多进程，会导致 crash，解决办法是：环境变量添加：`export OBJC_DISABLE_INITIALIZE_FORK_SAFETY=YES`
 2. TypeError: can't pickle cStringIO.StringO objects 看了些 stackoverflow 回复，貌似在python3.4解决了这类问题. 原因是，python 的 multiprocessing pool 进程池隐形的加入了一个任务队列，在你 apply_async 的时候，他会使用 pickle 序列化对象，但是 python 2.x 的pickle 应该是不支持这种模式的序列化。解决方法还不少，但是目前没看懂。。。最简单的就是直接使用Process，不用 ProcessPool。

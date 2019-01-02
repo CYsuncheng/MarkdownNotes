@@ -3,7 +3,7 @@
 ## 元组
 > 可以包含不同类型的对象，但是是不可变的，不可以在增减元素，用()来定义.
 
-``` python
+```python
 #定义一个元组
 tuple1 =()
 tuple1 = tuple({1,2,3,4,5,'6'})
@@ -31,7 +31,7 @@ print len(tuple1)
 ## 列表
 > 列表是Python中最具灵活性的有序集合对象类型,与字符串不同的是,列表可以包含任何种类的对象:数字,字符串,甚至是其他列表.并且列表都是可变对象,它支持在原处修改的操作.也可以通过指定的索引和分片获取元素.列表就可元组的可变版本，用[]来定义.
 
-``` python
+```python
 #定义一个列表
 listA = ['a', 'b', 'c', 1, 2]
 list(obj)
@@ -85,7 +85,7 @@ print item
 ## 字典
 > 字典(Dictionary) 是 Python 的内置数据类型之一，它定义了键和值之间一对一的关系,但它们是以无序的方式储存的。定义 Dictionary 使用一对大(花)括号” { } ”。
 
-``` python
+```python
 # 定义一个字典
 # Dictionary 不只是用于存储字符串。Dictionary 的值可以是任意数据类型，
 # 包括字符串、整数、对象，甚至其它的 dictionary。
@@ -142,7 +142,7 @@ dict1.clear() # clear 从一个 dictionary 中清除所有元素
 ## 集合
 > Python的集合(set)和其他语言类似, 是一个无序不重复元素集, 基本功能包括关系测试和消除重复元素. 集合对象还支持union(联合), intersection(交), difference(差)和sysmmetric difference(对称差集)等数学运算.由于集合是无序的,所以，sets 不支持 索引, 分片, 或其它类序列（sequence-like）的操作。
 
-``` python
+```python
 #定义一个集合
 set1 = {1, 2, 3, 4, 5}
 # 或者使用 set 函数

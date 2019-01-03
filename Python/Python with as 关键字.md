@@ -6,9 +6,9 @@
 
 紧跟 with 后面的语句被求值后，返回对象的`__enter__()`方法被调用，这个方法的返回值将被赋值给 as 后面的变量。当 with 后面的代码块全部被执行完之后，将调用前面返回对象的`__exit__()`方法。
 
-例如多线程的类 class ProcessPoolExecutor(_base.Executor) 继承自 Executor，查看源码：
+例如多线程的类 class ProcessPoolExecutor(\_base.Executor) 继承自 Executor，查看源码：
 
-``` python
+```python
 class Executor(object):
 
     def submit(self, fn, *args, **kwargs):
@@ -33,7 +33,7 @@ class Executor(object):
 在看一个例子，平时我们经常需要写入文件：
 常用的写法：
 
-``` python
+```python
 file = open("/tmp/foo.txt")
 try:
     data = file.read()
@@ -43,7 +43,7 @@ finally:
 
 使用 with 方式：
 
-``` python
+```python
 with open("/tmp/foo.txt") as file:
     data = file.read()
 ```
@@ -52,7 +52,7 @@ with open("/tmp/foo.txt") as file:
 
 接下来，我们可以自己写个类，实现 `__enter__()` and `__exit__()` 这两个方法。
 
-``` python
+```python
 class Sample:
     def __enter__(self):
         print "run __enter__()"
@@ -87,7 +87,7 @@ run __exit__()
 
 我们可以把上面的例子修改一下：
 
-``` python
+```python
 class Sample:
     def __enter__(self):
         print "run __enter__()"
@@ -111,7 +111,7 @@ if __name__ == '__main__':
 
 结果：
 
-``` shell
+```bash
 run __enter__()
 Traceback (most recent call last):
 run only method

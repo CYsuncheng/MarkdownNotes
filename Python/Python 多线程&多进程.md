@@ -11,7 +11,7 @@
 接下来，我们找个例子来试一下：
 
 ## 实验多线程&多进程
-``` python
+```python
 list_num = [25000000, 25000000, 25000000, 25000000]
 
 def test(n):
@@ -40,7 +40,7 @@ single_cost: 7.60823106766
 
 ### 多线程：
 
-``` python
+```python
 def multi_thread():
     # thread方式
     t_list = []
@@ -61,7 +61,7 @@ multi_thread_origin: 9.46964788437
 
 ### 多进程
 
-``` python
+```python
 def multi_process():
     p_list = []
     start = time.time()
@@ -85,7 +85,7 @@ multi_process_origin: 1.95564603806
 
 ### IO 密集型任务
 
-``` python
+```python
 urls = [
     'http://tieba.baidu.com/',
     'http://zhidao.baidu.com/',
@@ -112,7 +112,7 @@ def ex():
 
 这次为了方便，直接使用了线程池，上面代码运行的结果是：
 
-``` shell
+```bash
 single_cost: 3.52881193161
 PoolExecutor: 0.769335985184
 ```
@@ -122,7 +122,7 @@ PoolExecutor: 0.769335985184
 ### Thread 的 join and setDaemon 方法
 `t.join()` 方法的意思是，主线程需要等待子线程运行结束后继续执行，不加这个方法，主线程会继续执行，例如上面的例子，改成这样：
 
-``` python
+```python
 def multi_thread():
     # thread方式
     t_list = []
@@ -149,13 +149,13 @@ Future 是一种对象，表示异步执行的操作。在前面的例子中，e
 
 Future 有三个重要的方法：
 
-* `.done() `返回布尔值，表示Future 是否已经执行
+* `.done()`返回布尔值，表示Future 是否已经执行
 * `.add_done_callback()` 这个方法只有一个参数，类型是可调用对象，Future运行结束后会回调这个对象。
-* `.result() `如果 Future 运行结束后调用result(), 会返回可调用对象的结果或者抛出执行可调用对象时抛出的异常，如果是 Future 没有运行结束时调用 f.result()方法，这时会阻塞调用方所在的线程，直到有结果返回。此时result 方法还可以接收 timeout 参数，如果在指定的时间内 Future 没有运行完毕，会抛出 TimeoutError 异常。
+* `.result()`如果 Future 运行结束后调用result(), 会返回可调用对象的结果或者抛出执行可调用对象时抛出的异常，如果是 Future 没有运行结束时调用 f.result()方法，这时会阻塞调用方所在的线程，直到有结果返回。此时result 方法还可以接收 timeout 参数，如果在指定的时间内 Future 没有运行完毕，会抛出 TimeoutError 异常。
 
 简单看一下线程池的结构：
 
-![](https://ws2.sinaimg.cn/large/006tNbRwly1fy58tm5rfbj31ey0kcju1.jpg)
+![][image-1]
 
 对于上图的解释：
 1. 主线程将任务塞进TaskQueue(普通内存队列)，拿到Future对象
@@ -167,7 +167,7 @@ Future 有三个重要的方法：
 
 对于跨进程的通信：
 父进程要传递任务给子进程时，先使用pickle将任务对象进行序列化成字节数组，然后将字节数组通过socketpair的写描述符写入内核的buffer中。子进程接下来就可以从buffer中读取到字节数组，然后再使用pickle对字节数组进行反序列化来得到任务对象
-[以上解释出处](https://juejin.im/post/5b1e36476fb9a01e4a6e02e4)
+[以上解释出处][1]
 
 ## 锁
 
@@ -302,14 +302,16 @@ t1.start(）
 
 ## 遇到的坑
 1. Python 在 Mac 启动多进程，会导致 crash，解决办法是：环境变量添加：`export OBJC_DISABLE_INITIALIZE_FORK_SAFETY=YES`
-2. TypeError: can't pickle cStringIO.StringO objects 看了些 stackoverflow 回复，貌似在python3.4解决了这类问题. 原因是，python 的 multiprocessing pool 进程池隐形的加入了一个任务队列，在你 apply_async 的时候，他会使用 pickle 序列化对象，但是 python 2.x 的pickle 应该是不支持这种模式的序列化。解决方法还不少，但是目前没看懂。。。最简单的就是直接使用Process，不用 ProcessPool。
+2. TypeError: can't pickle cStringIO.StringO objects 看了些 stackoverflow 回复，貌似在python3.4解决了这类问题. 原因是，python 的 multiprocessing pool 进程池隐形的加入了一个任务队列，在你 apply\_async 的时候，他会使用 pickle 序列化对象，但是 python 2.x 的pickle 应该是不支持这种模式的序列化。解决方法还不少，但是目前没看懂。。。最简单的就是直接使用Process，不用 ProcessPool。
 3. cpu 核心数问题，例如我的电脑的系统信息显示4核，我以为最多就是可以跑4个进程，但是其实并不是看到的样子，处理器数目：1，核总数：4
 
-``` python
+```python
 >>> import multiprocessing
 >>> multiprocessing.cpu_count()
 8
 ```
-    
 
 
+[1]:	https://juejin.im/post/5b1e36476fb9a01e4a6e02e4
+
+[image-1]:	https://ws2.sinaimg.cn/large/006tNbRwly1fy58tm5rfbj31ey0kcju1.jpg

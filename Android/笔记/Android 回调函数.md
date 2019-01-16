@@ -4,7 +4,7 @@
 
 1、在A类中定义一个接口：需要我们在类中定义出一个接口，并且给这个接口定义出一个抽象方法，就像下面这样：
 
-``` java
+``` Java
 public interface CallBack{
         public abstract void work()
     }
@@ -12,7 +12,7 @@ public interface CallBack{
 
 以下是View.java类中定义的响应点击事件的接口：
 
-``` java
+``` Java
     /**
      * Interface definition for a callback to be invoked when a view is clicked.
      */
@@ -28,13 +28,13 @@ public interface CallBack{
 
 2、在A类中定义出该接口的一个成员变量：
 
-```java
+``` Java
 public CallBack mCallBack
 ```
 
 以下是View.java类中获取点击事件接口成员变量的源码：
 
-```java
+``` Java
 /**
  * Listener used to dispatch click events.
  * This field should be made private, so it is hidden from the SDK.
@@ -45,7 +45,7 @@ public OnClickListener mOnClickListener;
 
 3、在A类中定义出一个公共方法，可以用来设置这个接口的对象，调用该方法可以给接口对象变量赋值：
 
-```java
+``` Java
 public void setCallBack(CallBack callBack) {    
     this.mCallBack = callBack;    
 }
@@ -53,7 +53,7 @@ public void setCallBack(CallBack callBack) {
 
 以下是 setOnClickListener(OnClickListener l) 的源码：
 
-```java
+``` Java
 /**
  * Register a callback to be invoked when this view is clicked. If this view is not
  * clickable, it becomes clickable.
@@ -74,7 +74,7 @@ public void setOnClickListener(@Nullable OnClickListener l) {
 
 4、在A类中调用接口对象中的方法：
 
-```java
+``` Java
 public void doWork(){
    mCallBack.work();
 }
@@ -82,7 +82,7 @@ public void doWork(){
 
 在View.java中的体现：
 
-```java
+``` Java
 /**
  * Call this view's OnClickListener, if it is defined.  Performs all normal
  * actions associated with clicking: reporting accessibility event, playing
@@ -105,53 +105,56 @@ public boolean performClick() {
 
 这里附上整个项目的代码，这里A类映射到实际中使用Employee这个类来代表：
 
-```java
-public class Employee {    
-    /*  
-     * 定义回调接口的成员变量  
-     */    
-    private CallBack mCallBack;    
-    /*  
-     * 声明回调接口  
-     */    
-    public interface CallBack{    
-        public abstract void work();    
-    }    
-    /*  
-     * 设置回调接口对象成员变量  
-     */    
-    public void setCallBack(CallBack callBack) {    
-        this.mCallBack = callBack;    
-    }    
-    /*  
-     * 调用回调接口对象中的方法  
-     */    
-    public void doWork() {    
-        mCallback.work();    
-    }    
-} 
+``` Java
+public class Employee {
+    /*
+     * 定义回调接口的成员变量
+     */
+    private CallBack mCallBack;
+
+    /*
+     * 声明回调接口
+     */
+    public interface CallBack{
+        void work();
+    }
+    /*
+     * 设置回调接口对象成员变量
+     */
+    public void setCallBack(CallBack callBack) {
+        this.mCallBack = callBack;
+    }
+    /*
+     * 调用回调接口对象中的方法
+     */
+    public void doWork() {
+        mCallBack.work();
+    }
+}
 ```
 
 我们在定义出一个B类，就用Boss类吧：
 
-```java
-public class Boss {    
-    private Employee employee;    
-    /*  
-     * 为Employee设置回调函数, 在这里定义具体的回调方法  
-     */    
-        employee.setCallback(new Employee.Callback() {    
-            @Override    
-            public void work() {    
-                System.out.println("work");    
-            }    
-        });      
-}  
+``` Java
+public class Boos {
+    private Employee employee = new Employee();
+    /*
+     * 为Employee设置回调函数, 在这里定义具体的回调方法
+     */
+    public void setCallback() {
+        employee.setCallBack(() -> System.out.println("this is the work"));
+        employee.doWork();
+    }
+
+    public static void main(String[] args) {
+        new Boos().setCallback();
+    }
+}
 ```
 
-我们附上我们最常用的Button点击事件的处理的代码：
+附上我们最常用的Button点击事件的处理的代码：
 
-```java
+``` Java
 public class TestCallBack{
     private Button button;
     button.setOnClickListener(new OnClickListener() {
@@ -169,7 +172,7 @@ public class TestCallBack{
 
 首先，在View类中我们能找到setOnClickListener(OnClickListener l)方法：
 
-```java
+``` Java
 public void setOnClickListener(@Nullable OnClickListener l) {
     if (!isClickable()) {
         setClickable(true);
@@ -180,7 +183,7 @@ public void setOnClickListener(@Nullable OnClickListener l) {
 
 这里将OnClickListener赋值给了mOnClickListener，我们想要找到onClick()方法是由View回调而不是Button自己回调的证据，就在这里：
 
-```java
+``` Java
 public boolean performClick() {  
      sendAccessibilityEvent(AccessibilityEvent.TYPE_VIEW_CLICKED);  
      ListenerInfo li = mListenerInfo;  
@@ -197,7 +200,7 @@ public boolean performClick() {
 
 这个方法，我们来看一下这个方法：
 
-```java
+``` Java
 public boolean onTouchEvent(MotionEvent event) {  
     // 略去无用代码...  
     if (((viewFlags & CLICKABLE) == CLICKABLE || (viewFlags & LONG_CLICKABLE) == LONG_CLICKABLE)) {  
@@ -233,7 +236,7 @@ public boolean onTouchEvent(MotionEvent event) {
 
 还记得前面我们在performClick();类里面找到的关于View.java类中对于回调方法onClick的调用么
 
-```java
+``` Java
 li.mOnClickListener.onClick(this);//就是这里
 ```
 
@@ -242,7 +245,7 @@ li.mOnClickListener.onClick(this);//就是这里
 回掉的写法和结构大概清楚了，那B类如何告诉A类调用自己的方法的呢？
 在Android中，涉及到了事件传递的机制，下面简单说明：
 
-``` java
+``` Java
 public boolean dispatchTouchEvent(MotionEvent event) {
  
         if (mInputEventConsistencyVerifier != null) {
@@ -268,7 +271,7 @@ public boolean dispatchTouchEvent(MotionEvent event) {
 
 由于我们没有实现OnTouchListener接口，而onTouch()方法的默认返回值为false，所以第一个if语句中的代码不会被执行到，进入第二个if语句中，执行了onTouchEvent()方法。那么我们再来看一下该方法：
 
-``` java
+``` Java
 public boolean onTouchEvent(MotionEvent event) {
     // 略去无用代码...
     if (((viewFlags & CLICKABLE) == CLICKABLE || (viewFlags & LONG_CLICKABLE) == LONG_CLICKABLE)) {
@@ -301,12 +304,8 @@ public boolean onTouchEvent(MotionEvent event) {
 
 我们只看重点，在ACTION_UP这个case当中，我们找到了关键的代码：
 
-``` java
+``` Java
 if (!post(mPerformClick)) {
     performClick();
 }
 ```
-
-资料：
-[Android中回调函数机制解析](https://blog.csdn.net/devor/article/details/17883427)
-[android中的回调](https://blog.csdn.net/xsf50717/article/details/50520462)

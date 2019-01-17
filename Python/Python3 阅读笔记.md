@@ -83,8 +83,37 @@ zip函数可以作用于任意数量的序列，并且可以应付不等长的�
 
 reversed和sorted函数。这两个函数可作用于任何序列或可迭代对象，但不是原地修改对象，而是返回翻转或排序后的版本。
 
+### 列表与元组的区别
+1. 最重要的一点是tuple是不可变类型，大小固定，而 list 是可变类型、数据可以动态变化，这种差异使得两者提供的方法、应用场景、性能上都有很大的区别。
+2. tuple 用于存储异构(heterogeneous)数据，当做没有字段名的记录来用，比如用 tuple 来记录一个人的身高、体重、年龄。
+3. 列表一般用于存储同构数据(homogenous)，同构数据就是具有相同意义的数据，比如下面的都是字符串类型。
+
 #### 循环中的else子句
-在while条件语句为false时，执行else的语句块，在for条件语句为false或结束后没有被break中断时，执行else的语句块，
+**在while条件语句为false时，执行else的语句块，在for条件语句为false或结束后没有被break中断时，执行else的语句块**
+
+当你用 for 循环迭代查找列表的中的某个元素时，如果找到了就立刻退出循环，如果迭代完了列表还没找到需要以另外一种形式（比如异常）的方式通知调用者时，用 for...else... 无疑是最好的选择。
+``` Python
+for i in mylist:
+    if i == target:
+        break
+    process(i)
+else:
+    raise ValueError("List argument missing terminal flag.")
+```
+
+否则只能这样：
+
+``` Python
+found = False
+for i in mylist:
+    if i == target:
+        found = True
+        break
+    process(i)
+
+if not found:
+    raise ValueError("List argument missing terminal flag.")
+```
 
 ## 函数
 ### 闭包函数

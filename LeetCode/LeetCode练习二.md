@@ -160,3 +160,116 @@ class Solution {
     }
 }
 ```
+
+## Fizz Buzz
+写一个程序，输出从 1 到 n 数字的字符串表示。
+1. 如果 n 是3的倍数，输出“Fizz”；
+2. 如果 n 是5的倍数，输出“Buzz”；
+3. 如果 n 同时是3和5的倍数，输出 “FizzBuzz”。
+
+### 测试用例
+n = 15
+
+### 代码
+
+Python
+
+``` Python
+class Solution(object):
+    def fizzBuzz(self, n):
+        """
+        :type n: int
+        :rtype: List[str]
+        """
+        str_list = []
+        for number in range(1, n+1):
+            str_list.append(str(number))
+            if number%3 == 0 and number%5 == 0:
+                str_list[number-1] = "FizzBuzz"
+            elif number%3 == 0:
+                str_list[number-1] = "Fizz"
+            elif number%5 == 0:
+                str_list[number-1] = "Buzz"
+        return str_list
+```
+
+Java
+
+``` Java
+class Solution {
+    public List<String> fizzBuzz(int n) {
+        List<String> result = new ArrayList<>();
+        for (int i = 1; i <= n; i++) {
+            if(i % 3 == 0 && i % 5 == 0){
+                result.add("FizzBuzz");
+            }else if(i % 3 == 0){
+                result.add("Fizz");
+            }else if(i % 5 == 0){
+                result.add("Buzz");
+            }else{
+                result.add(i + "");
+            }
+        }
+        return result;
+    }
+}
+```
+
+## 分糖果
+给定一个偶数长度的数组，其中不同的数字代表着不同种类的糖果，每一个数字代表一个糖果。你需要把这些糖果平均分给一个弟弟和一个妹妹。返回妹妹可以获得的最大糖果的种类数。
+
+示例 1:
+输入: candies = [1,1,2,2,3,3]
+输出: 3
+解析: 一共有三种种类的糖果，每一种都有两个。
+     最优分配方案：妹妹获得[1,2,3],弟弟也获得[1,2,3]。这样使妹妹获得糖果的种类数最多。
+
+示例 2 :
+输入: candies = [1,1,2,3]
+输出: 2
+解析: 妹妹获得糖果[2,3],弟弟获得糖果[1,1]，妹妹有两种不同的糖果，弟弟只有一种。这样使得妹妹可以获得的糖果种类数最多。
+
+### 测试用例
+[1,1,2,2,3,3]
+[1,1,2,3]
+[1,1,2,3,4,5,6,7,8,3,2,4]
+
+### 代码
+
+Python
+
+``` Python
+class Solution(object):
+    def distributeCandies(self, candies):
+        """
+        :type candies: List[int]
+        :rtype: int
+        """
+        r_set = set(candies)
+        if len(r_set) >= len(candies)/2:
+            return len(candies)/2
+        else:
+            return len(r_set)
+            
+        # 更简单的方式
+        return min(len(candies)/2, len(set(candies)))
+```
+
+Java
+ 
+``` Java
+class Solution {
+    public int distributeCandies(int[] candies) {
+        Set set = new HashSet();
+        for (int i=0; i<candies.length; i++) {
+            set.add(candies[i]);
+        }
+        if (set.size() >= candies.length/2) {
+            return candies.length/2;
+        }
+        else{
+            return set.size();
+        }
+    }
+}
+```

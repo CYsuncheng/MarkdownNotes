@@ -273,3 +273,290 @@ class Solution {
     }
 }
 ```
+
+## 下一个更大元素 I
+给定两个没有重复元素的数组 nums1 和 nums2 ，其中nums1 是 nums2 的子集。找到 nums1 中每个元素在 nums2 中的下一个比其大的值。
+nums1 中数字 x 的下一个更大元素是指 x 在 nums2 中对应位置的右边的第一个比 x 大的元素。如果不存在，对应位置输出-1。
+
+示例 1:
+输入: nums1 = [4,1,2], nums2 = [1,3,4,2].
+输出: [-1,3,-1]
+解释:
+    对于num1中的数字4，你无法在第二个数组中找到下一个更大的数字，因此输出 -1。
+    对于num1中的数字1，第二个数组中数字1右边的下一个较大数字是 3。
+    对于num1中的数字2，第二个数组中没有下一个更大的数字，因此输出 -1。
+    
+### 测试用例
+[4,1,2]
+[1,3,4,2]
+[4,1,2,5]
+[1,3,4,2,5,6]
+
+### 代码
+
+``` Python
+class Solution(object):
+    def nextGreaterElement(self, findNums, nums):
+        """
+        :type findNums: List[int]
+        :type nums: List[int]
+        :rtype: List[int]
+        """
+        result = []
+        for item in findNums:
+            index = nums.index(item)
+            if index < len(nums)-1: 
+                for i in range(index, len(nums)-1):
+                    if nums[i+1] > item:
+                        result.append(nums[i+1])
+                        break
+                else:
+                    result.append(-1)
+            else:
+                result.append(-1)
+        return result
+```
+
+## 只出现一次的数字
+给定一个非空整数数组，除了某个元素只出现一次以外，其余每个元素均出现两次。找出那个只出现了一次的元素。
+
+### 测试用例
+[4,1,2,1,2]
+
+### 代码
+
+**异或运算的运用，不太懂，先记下来**
+
+``` Python
+class Solution(object):
+    def singleNumber(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: int
+        """
+        a = 0
+        for num in nums:
+            a = a ^ num
+            print a
+        return a
+```
+
+## 回文数
+判断一个整数是否是回文数。回文数是指正序（从左向右）和倒序（从右向左）读都是一样的整数。
+
+示例 1:
+输入: 121
+输出: true
+
+示例 2:
+输入: -121
+输出: false
+解释: 从左向右读, 为 -121 。 从右向左读, 为 121- 。因此它不是一个回文数。
+
+### 测试用例
+1234321
+
+### 代码
+
+``` Python
+class Solution(object):
+    def isPalindrome(self, x):
+        """
+        :type x: int
+        :rtype: bool
+        """
+        if str(x) == str(x)[::-1]:
+            return True
+        return False
+```
+
+## 求众数
+给定一个大小为 n 的数组，找到其中的众数。众数是指在数组中出现次数大于 ⌊ n/2 ⌋ 的元素。
+你可以假设数组是非空的，并且给定的数组总是存在众数。
+示例 1:
+输入: [3,2,3]
+输出: 3
+
+示例 2:
+输入: [2,2,1,1,1,2,2]
+输出: 2
+
+### 测试用例
+[2,2,1,1,1,2,2]
+
+### 代码
+
+Python
+
+``` Python
+class Solution(object):
+    def majorityElement(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: int
+        """
+        count = 1
+        res = nums[0]
+        for i in range(1, len(nums)):
+            if res == nums[i]:
+                count+=1
+            else:
+                count-=1
+                if count == 0:
+                    res = nums[i+1]
+        return res
+```
+
+Java
+
+``` Java
+class Solution {
+    public int majorityElement(int[] nums) {
+		int count = 1;
+		int maj = nums[0];
+		for (int i = 1; i < nums.length; i++) {
+			if (maj == nums[i])
+				count++;
+			else {
+				count--;
+				if (count == 0) {
+					maj = nums[i + 1];
+				}
+			}
+		}
+		return maj;
+	}
+}
+```
+
+## 找不同
+给定两个字符串 s 和 t，它们只包含小写字母。
+字符串 t 由字符串 s 随机重排，然后在随机位置添加一个字母。
+请找出在 t 中被添加的字母。
+
+### 测试用例
+"abcddddddddd"
+"abcdedddddddd"
+
+### 代码
+
+``` Python
+class Solution(object):
+    def findTheDifference(self, s, t):
+        """
+        :type s: str
+        :type t: str
+        :rtype: str
+        """
+        for t_t in t:
+            if t_t not in s:
+                return t_t
+        else:
+            # 这个方法可以直接返回一个字典
+            # from collections import Counter
+            # s_dict = Counter(s)
+            # t_dict = Counter(t)
+            s_dict = {}
+            t_dict = {}
+            for s_k in s:
+                s_dict[s_k] = s_dict.get(s_k, 0) + 1
+            for t_k in t:
+                t_dict[t_k] = t_dict.get(t_k, 0) + 1
+        for k, v in s_dict.items():
+            if t_dict[k] > v:
+                return k
+```
+
+## 无重复字符的最长子串
+给定一个字符串，请你找出其中不含有重复字符的 最长子串 的长度。
+
+示例 1:
+输入: "abcabcbb"
+输出: 3 
+解释: 因为无重复字符的最长子串是 "abc"，所以其长度为 3。
+
+示例 2:
+输入: "bbbbb"
+输出: 1
+解释: 因为无重复字符的最长子串是 "b"，所以其长度为 1。
+
+示例 3:
+输入: "pwwkew"
+输出: 3
+解释: 因为无重复字符的最长子串是 "wke"，所以其长度为 3。
+     请注意，你的答案必须是 子串 的长度，"pwke" 是一个子序列，不是子串。
+     
+### 测试用例
+
+``` Java
+"abcdefghijklmnopqrstuvwxyzABCDabcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~abcdefghijklmnopqrstuvwxyzABCDabcdefghijklmnopqrstuvwxyzABCDabcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~ abcdefghijklmnopqrstuvwxyzABCDabcdefghijklmnopqrstuvwxyzABCDabcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~ abcdefghijklmnopqrstuvwxyzABCD"
+```
+
+### 代码
+
+Java
+
+``` Java
+class Solution {
+    public int lengthOfLongestSubstring(String s) {
+        String maxSubString = "";
+        String substring;
+        for(int i=0;i<=s.length()-1;i++)
+            for(int j=i+maxSubString.length();j<=s.length();j++){
+                substring = s.substring(i,j);
+                if(substring.length()>maxSubString.length()){
+                    if(isNotContainSubString(substring)){
+                        maxSubString = substring;
+                    }else{
+                        break;
+                    }
+                }
+            }
+        return maxSubString.length();
+    }
+    
+    public boolean isNotContainSubString(String s){
+        for(int i = 0;i<s.length();i++){
+            String compareString = String.valueOf(s.charAt(i));
+            String subString = s.substring(i+1);
+            if(subString.contains(compareString)){
+                return false;
+            }else{
+                if(i == s.length()-1)
+                    return true;
+            }
+                
+        }
+            return false;    
+    }
+}
+```
+
+Python，运行OK，但是耗时久，不符合要求
+
+``` Python
+class Solution(object):
+    def lengthOfLongestSubstring(self, s):
+        """
+        :type s: str
+        :rtype: int
+        """
+        sub_str = []
+        res = 0
+        if s == "":
+            return 0
+        if s == " " or len(s) == 1:
+            return 1
+        for i in range(len(s)):
+            for j in range(i+1, len(s)+1):
+                sub = s[i:j]
+                for s_s in sub:
+                    if sub.count(s_s) == 1:
+                        continue
+                    else:
+                        break
+                else:
+                    if res < j-i:
+                        res = j-i
+        return res
+```

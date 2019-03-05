@@ -1,24 +1,9 @@
 # RxJava 入门教程一
 
-### 1\. 什么是函数式编程
+### 什么是响应式编程
+响应式编程是一种面向数据流和变化传播的编程范式，数据更新是相关联的。举一个简单的例子：A = B + C ,A 被赋值为 B 和 C 的值, 紧接着 B 发生了变化，但是 A 却不会发生变化。但如果是响应式编程，当 B 发生变化以后，A 就会随之发生改变。体现在 RxJava 上很明显的就是我们对数据流的操作以及当被观察者发生变化的时候，观察者随之发生变化。
 
-*   函数式编程是一种编程范式，是面向数学的抽象，将计算描述为一种表达式求值，函数可以在任何地方定义，并且可以对函数进行组合。体现在 RxJava 上很明显的就是链式操作、操作符的应用。
-
-### 2\. 什么是响应式编程
-
-*   响应式编程是一种面向数据流和变化传播的编程范式，数据更新是相关联的。举一个简单的例子：A = B + C ,A 被赋值为 B 和 C 的值, 紧接着 B 发生了变化，但是 A 却不会发生变化。但如果是响应式编程，当 B 发生变化以后，A 就会随之发生改变。体现在 RxJava 上很明显的就是我们对数据流的操作以及当被观察者发生变化的时候，观察者随之发生变化。
-
-### 3\. 什么是函数响应式编程
-
-*   把函数式编程里面的一套思路和响应式编程合起来就是函数响应式编程。它可以极大地简化项目，特别是处理嵌套回调的异步事件、复杂的列表过滤和变换或者时间相关问题。
-
-### 4\. RxJava 概述
-
-*   RxJava 是一个函数库，让开发者可以利用可观察序列和 LINQ 风格查询操作符来编写异步和基于事件的程序。
-*   开发者可以用 Observables 表示异步数据流，用 LINQ 操作符查询异步数据流，用 Schedulers 参数化异步数据流的并发处理。
-*   Rx 可以这样定义：Rx = Observables + LINQ + Schedulers.
-
-### 5\. 为何要用 RxJava
+### 为何要用 RxJava
 
 *   代码简洁：异步操作有 Handler、AsyncTask 等，但是使用 RxJava，就算再多的异步操作，代码逻辑越来越复杂，RxJava 依然可以保持清晰的逻辑。
 
@@ -83,7 +68,7 @@ Observable.from(folders)
 
 不难发现：RxJava 好就好在什么复杂逻辑都能穿成一条线的简洁。
 
-### 6\. RxJava 的原理
+### RxJava 的原理
 
 *   RxJava 的原理就是创建一个 Observable 对象来干活，然后使用各种操作符建立起来的链式操作，就如同流水线一样，把你想要处理的数据一步一步地加工成你想要的成品，然后发射给 Subscriber 处理。
 *   看代码：
@@ -102,7 +87,7 @@ Observable observable = Observable.create(new Observable.OnSubscribe<String>() {
 
 这里传入了一个 OnSubscribe 对象作为参数。OnSubscribe 存储在返回的 Observable 对象中，它的作用相当于一个计划表，当 Observable 被订阅的时候，OnSubscribe 对象中的 call 方法就会被自动调用，事件序列就会依照设定依次触发，这样，由被观察者调用了观察者的回调方法，就实现了由被观察者向观察者的事件传递，即观察者模式。
 
-### 7\. 观察者模式（简单说）
+### 观察者模式（简单说）
 
 7.1 观察者模式需要解决的问题
 
@@ -119,12 +104,12 @@ Observable observable = Observable.create(new Observable.OnSubscribe<String>() {
 *   采取这样被动的观察方式，既省去了反复检索状态的资源消耗，也能够得到最高的反馈速度。
 *   通过 setOnClickListener（）方法，Button 持有 OnClickListener 的引用，当用户点击时，Button 会调用 OnClickListener 中的 onClick 方法。抽象出来就是 Button -> 被观察者、OnClickListener -> 观察者、setOnClickListener() -> 订阅，onClick() -> 事件。
 
-### 8\. RxJava 与观察者模式
+###  RxJava 与观察者模式
 
 *   RxJava 有四个基本概念：Observable (可观察者，即被观察者)、 Observer (观察者)、 subscribe (订阅)、事件（被观察者的行为）。Observable 和 Observer 通过 subscribe() 方法实现订阅关系，从而 Observable 可以在需要的时候发出事件来通知 Observer。
 *   RxJava 是通过扩展的观察者模式来实现的：与传统观察者模式不同， RxJava 的事件回调方法除了普通事件 onNext() （相当于 onClick() / onEvent()）之外，还定义了两个特殊的事件：onCompleted() 和 onError()。
 
-### 9\. RxJava 基本实现
+### RxJava 基本实现
 
 *   添加依赖
 
@@ -246,7 +231,7 @@ Observable.create(new Observable.OnSubscribe<String>() {
 
 说明：先调用 onStart 方法，接着调用两个 onNext 方法，最后调用 onCompleted 方法。
 
-### 10\. Observer 和 Subscriber 的关系
+### Observer 和 Subscriber 的关系
 
 10.1 相同点
 
@@ -298,11 +283,11 @@ Subscriber<String> subscriber = new Subscriber<String>() {
 
 *   unsubscribe(): 这是 Subscriber 所实现的另一个接口 Subscription 的方法，用于取消订阅。在这个方法被调用后，Subscriber 将不再接收事件。一般在这个方法调用前，可以使用 isUnsubscribed() 先判断一下状态。 unsubscribe() 这个方法很重要，因为在 subscribe() 之后， Observable 会持有 Subscriber 的引用，这个引用如果不能及时被释放，将有内存泄露的风险。所以最好保持一个原则：要在不再使用的时候尽快在合适的地方（例如 onPause() onStop() 等方法中）调用 unsubscribe() 来解除引用关系，以避免内存泄露的发生。
 
-### 11\. 操作符分类
+### 操作符分类
 
 Rx 操作符的类型分为创建操作符、变换操作符、过滤操作符、组合操作符、错误处理操作符、辅助操作符、条件和布尔操作符、算术和聚合操作符及连接操作符等，而这些操作符类型下又有很多操作符，每个操作符可能还有很多变体。
 
-### 12\. 创建操作符
+### 创建操作符
 
 创建操作符, 顾名思义，它的作用就是创建 Observable. 这里讲解 create、just 和 from 以及 interval、range、repeat、deffer 操作符。
 
@@ -498,7 +483,7 @@ Observable observable = Observable.from(list);
 10-16 22:01:18.496 30581-30581/? D/Deffer: onCompleted
 ```
 
-### 13\. 变换操作符
+### 变换操作符
 
 变换操作符，顾名思义，它的作用就是对 Observable 发射的数据按照一定的规则做一些变换操作，然后将变换后的数据发射出去。这里讲解 map、flatmap、cast、flatMapIterable、buffer 和 groupBy.
 

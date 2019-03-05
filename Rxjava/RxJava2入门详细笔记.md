@@ -11,7 +11,7 @@ RxJava 有以下三个最基本的元素：
 创建被观察者
 
 ```java
-		Observable<Integer> observable = Observable.create(new ObservableOnSubscribe<Integer>() {
+Observable<Integer> observable = Observable.create(new ObservableOnSubscribe<Integer>() {
             @Override
             public void subscribe(ObservableEmitter<Integer> e) {
                 Log.e(TAG, "subscribe");
@@ -27,7 +27,7 @@ RxJava 有以下三个最基本的元素：
 创建观察者
 
 ```java
-		Observer<Integer> observer = new Observer<Integer>() {
+Observer<Integer> observer = new Observer<Integer>() {
             @Override
             public void onSubscribe(Disposable d) {
                 Log.e(TAG, "onSubscribe");
@@ -59,7 +59,7 @@ RxJava 有以下三个最基本的元素：
 也可以以链式调用的方式来完成订阅
 
 ```java
-		Observable.create(new ObservableOnSubscribe<Integer>() {
+Observable.create(new ObservableOnSubscribe<Integer>() {
             @Override
             public void subscribe(ObservableEmitter<Integer> e) {
                 Log.e(TAG, "subscribe");
@@ -121,7 +121,7 @@ RxJava 有以下三个最基本的元素：
 用于创建一个 `Observable`。一个正确的 `Observable` 必须尝试调用观察者的 `onCompleted` 方法或者 `onError` 方法**有且仅有一次**，而且此后不能再调用`Observable` 的任何其它方法
 
 ```java
-		Observable<Integer> observable = Observable.create(new ObservableOnSubscribe<Integer>() {
+Observable<Integer> observable = Observable.create(new ObservableOnSubscribe<Integer>() {
             @Override
             public void subscribe(ObservableEmitter<Integer> e) {
                 Log.e(TAG, "subscribe");
@@ -139,7 +139,7 @@ RxJava 有以下三个最基本的元素：
 创建一个 `Observable`并发送事件，发送的事件总数不可以超出十个
 
 ```java
-		Observable.just(1, 2, 3).subscribe(new Observer<Integer>() {
+Observable.just(1, 2, 3).subscribe(new Observer<Integer>() {
             @Override
             public void onSubscribe(Disposable d) {
                 Log.e(TAG, "onSubscribe");
@@ -175,8 +175,8 @@ RxJava 有以下三个最基本的元素：
 和 `just()` 类似，但 `fromArray` 可以传入多于十个的变量，并且可以传入一个数组
 
 ```java
-	    Integer[] arrays = new Integer[]{1, 2, 3};
-        Observable.fromArray(arrays).subscribe(new Observer<Integer>() {
+Integer[] arrays = new Integer[]{1, 2, 3};
+Observable.fromArray(arrays).subscribe(new Observer<Integer>() {
             @Override
             public void onSubscribe(Disposable d) {
                 Log.e(TAG, "onSubscribe");
@@ -204,7 +204,7 @@ RxJava 有以下三个最基本的元素：
 这里的 `Callable` 是指 `java.util.concurrent` 中的 `Callable`，`Callable` 和 `Runnable` 的用法基本一致，只是它包含一个返回值，这个结果值就是发给观察者的
 
 ```java
-        Observable.fromCallable(new Callable<Integer>() {
+Observable.fromCallable(new Callable<Integer>() {
             @Override
             public Integer call() {
                 return 100;
@@ -217,13 +217,13 @@ RxJava 有以下三个最基本的元素：
 这里的 `Future` 是指 `java.util.concurrent` 中的 `Future`，`Future` 的作用是增加了 `cancel()` 等方法操作 `Callable`，它可以通过 `get()` 方法来获取 `Callable` 返回的值
 
 ```java
-		final FutureTask<Integer> futureTask = new FutureTask<>(new Callable<Integer>() {
+final FutureTask<Integer> futureTask = new FutureTask<>(new Callable<Integer>() {
             @Override
             public Integer call() {
                 return 12;
             }
         });
-        Observable.fromFuture(futureTask).doOnSubscribe(new Consumer<Disposable>() {
+Observable.fromFuture(futureTask).doOnSubscribe(new Consumer<Disposable>() {
             @Override
             public void accept(Disposable disposable) {
                 futureTask.run();
@@ -241,16 +241,16 @@ RxJava 有以下三个最基本的元素：
 用于发送一个 `List` 集合数据给观察者
 
 ```java
-	    List<Integer> integerList = new ArrayList<>();
-        integerList.add(1);
-        integerList.add(2);
-        integerList.add(3);
-        Observable.fromIterable(integerList).subscribe(new Consumer<Integer>() {
-            @Override
-            public void accept(Integer integer) {
-                Log.e(TAG, "accept: " + integer);
-            }
-        });
+List<Integer> integerList = new ArrayList<>();
+integerList.add(1);
+integerList.add(2);
+integerList.add(3);
+Observable.fromIterable(integerList).subscribe(new Consumer<Integer>() {
+    @Override
+    public void accept(Integer integer) {
+        Log.e(TAG, "accept: " + integer);
+    }
+});
 ```
 
 #### 2.7、defer()
@@ -259,9 +259,9 @@ RxJava 有以下三个最基本的元素：
 
 ```java
     //全局变量
-    private Integer value = 100;
+private Integer value = 100;
 
-	Observable<Integer> observable = Observable.defer(new Callable<ObservableSource<? extends Integer>>() {
+Observable<Integer> observable = Observable.defer(new Callable<ObservableSource<? extends Integer>>() {
             @Override
             public ObservableSource<? extends Integer> call() {
                 return Observable.just(value);
@@ -295,13 +295,13 @@ RxJava 有以下三个最基本的元素：
 延迟指定时间后会发送一个大小为 `0L` 的值给观察者
 
 ```java
-       Observable.timer(2, TimeUnit.SECONDS)
-           .subscribe(new Consumer<Long>() {
-               @Override
-               public void accept(Long aLong) {
+Observable.timer(2, TimeUnit.SECONDS)
+       .subscribe(new Consumer<Long>() {
+           @Override
+           public void accept(Long aLong) {
 
-               }
-           });
+           }
+       });
 ```
 
 #### 2.9、interval()
@@ -309,13 +309,13 @@ RxJava 有以下三个最基本的元素：
 每隔一段时间就发送一个事件，传递的值从 0 开始并不断增 1
 
 ```java
-	Observable.interval(2, TimeUnit.SECONDS)
-        .subscribe(new Consumer<Long>() {
-            @Override
-            public void accept(Long aLong) {
-                Log.e(TAG, "value is: " + aLong);
-            }
-        });
+Observable.interval(2, TimeUnit.SECONDS)
+    .subscribe(new Consumer<Long>() {
+        @Override
+        public void accept(Long aLong) {
+            Log.e(TAG, "value is: " + aLong);
+        }
+    });
 ```
 
 #### 2.10、intervalRange()
@@ -323,28 +323,28 @@ RxJava 有以下三个最基本的元素：
 可以指定发送事件的开始值和数量，其他与 `interval()` 的功能一样
 
 ```java
-			Observable.intervalRange(2, 3, 4, 5, TimeUnit.SECONDS)
-                .subscribe(new Observer<Long>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
-                        Log.e(TAG, "onSubscribe");
-                    }
+Observable.intervalRange(2, 3, 4, 5, TimeUnit.SECONDS)
+    .subscribe(new Observer<Long>() {
+        @Override
+        public void onSubscribe(Disposable d) {
+            Log.e(TAG, "onSubscribe");
+        }
 
-                    @Override
-                    public void onNext(Long aLong) {
-                        Log.e(TAG, "onNext：" + aLong);
-                    }
+        @Override
+        public void onNext(Long aLong) {
+            Log.e(TAG, "onNext：" + aLong);
+        }
 
-                    @Override
-                    public void onError(Throwable e) {
-                        Log.e(TAG, "onError: " + e.getMessage());
-                    }
+        @Override
+        public void onError(Throwable e) {
+            Log.e(TAG, "onError: " + e.getMessage());
+        }
 
-                    @Override
-                    public void onComplete() {
-                        Log.e(TAG, "onComplete");
-                    }
-                });
+        @Override
+        public void onComplete() {
+            Log.e(TAG, "onComplete");
+        }
+    });
 ```
 
 起始值从 2 开始递增，事件共传递三次，第一次事件在订阅后延迟 4 秒触发，之后每次延迟 5 秒
@@ -362,13 +362,13 @@ RxJava 有以下三个最基本的元素：
 发送指定范围的事件序列
 
 ```java
-			Observable.range(2, 5)
-                .subscribe(new Consumer<Integer>() {
-                    @Override
-                    public void accept(Integer integer) {
-                        Log.e(TAG, "values is :" + integer);
-                    }
-                });
+Observable.range(2, 5)
+    .subscribe(new Consumer<Integer>() {
+        @Override
+        public void accept(Integer integer) {
+            Log.e(TAG, "values is :" + integer);
+        }
+    });
 ```
 
 ```java
@@ -384,13 +384,13 @@ RxJava 有以下三个最基本的元素：
 作用与 `range()` 一样，只是数据类型是 `Long`
 
 ```java
-       		 Observable.rangeLong((2, 5)
-                .subscribe(new Consumer<Long>() {
-                    @Override
-                    public void accept(Long aLong) {
-                        Log.e(TAG, "values is :" + aLong);
-                    }
-                });
+Observable.rangeLong((2, 5)
+    .subscribe(new Consumer<Long>() {
+        @Override
+        public void accept(Long aLong) {
+            Log.e(TAG, "values is :" + aLong);
+        }
+    });
 ```
 
 #### 2.13、empty() & never() & error()
@@ -398,27 +398,27 @@ RxJava 有以下三个最基本的元素：
 `empty()` 直接发送 `onComplete()` 事件
 
 ```java
-		Observable.empty().subscribe(new Observer<Object>() {
-            @Override
-            public void onSubscribe(Disposable d) {
-                Log.e(TAG, "onSubscribe");
-            }
+Observable.empty().subscribe(new Observer<Object>() {
+    @Override
+    public void onSubscribe(Disposable d) {
+        Log.e(TAG, "onSubscribe");
+    }
 
-            @Override
-            public void onNext(Object object) {
-                Log.e(TAG, "onNext: " + object);
-            }
+    @Override
+    public void onNext(Object object) {
+        Log.e(TAG, "onNext: " + object);
+    }
 
-            @Override
-            public void onError(Throwable e) {
-                Log.e(TAG, "onError: " + e.getMessage());
-            }
+    @Override
+    public void onError(Throwable e) {
+        Log.e(TAG, "onError: " + e.getMessage());
+    }
 
-            @Override
-            public void onComplete() {
-                Log.e(TAG, "onComplete");
-            }
-        });
+    @Override
+    public void onComplete() {
+        Log.e(TAG, "onComplete");
+    }
+});
 ```
 
 打印结果
@@ -438,26 +438,26 @@ onSubscribe
 
 ```java
 Observable.error(new Throwable("Hello")).subscribe(new Observer<Object>() {
-            @Override
-            public void onSubscribe(Disposable d) {
-                Log.e(TAG, "onSubscribe");
-            }
+        @Override
+        public void onSubscribe(Disposable d) {
+            Log.e(TAG, "onSubscribe");
+        }
 
-            @Override
-            public void onNext(Object object) {
-                Log.e(TAG, "onNext: " + object);
-            }
+        @Override
+        public void onNext(Object object) {
+            Log.e(TAG, "onNext: " + object);
+        }
 
-            @Override
-            public void onError(Throwable e) {
-                Log.e(TAG, "onError: " + e.getMessage());
-            }
+        @Override
+        public void onError(Throwable e) {
+            Log.e(TAG, "onError: " + e.getMessage());
+        }
 
-            @Override
-            public void onComplete() {
-                Log.e(TAG, "onComplete");
-            }
-        });
+        @Override
+        public void onComplete() {
+            Log.e(TAG, "onComplete");
+        }
+    });
 ```
 
 ```java
@@ -472,19 +472,19 @@ Observable.error(new Throwable("Hello")).subscribe(new Observer<Object>() {
 `map()` 用于将被观察者发送的数据类型转变成其他的类型
 
 ```java
-	Observable.just(1, 2, 3)
-        .map(new Function<Integer, String>() {
-            @Override
-            public String apply(Integer integer) {
-                return "I'm " + integer;
-            }
-        })
-        .subscribe(new Consumer<String>() {
-            @Override
-            public void accept(String s) {
-                Log.e(TAG, s);
-            }
-        });
+Observable.just(1, 2, 3)
+    .map(new Function<Integer, String>() {
+        @Override
+        public String apply(Integer integer) {
+            return "I'm " + integer;
+        }
+    })
+    .subscribe(new Consumer<String>() {
+        @Override
+        public void accept(String s) {
+            Log.e(TAG, s);
+        }
+    });
 ```
 
 ```java
@@ -498,31 +498,31 @@ Observable.error(new Throwable("Hello")).subscribe(new Observer<Object>() {
 用于将事件序列中的元素进行整合加工，返回一个新的被观察者
 
 ```java
-        List<List<String>> listArrayList = new ArrayList<>();
+List<List<String>> listArrayList = new ArrayList<>();
 
-        List<String> stringList = new ArrayList<>();
-        for (int j = 0; j < 2; j++) {
-            stringList.add("A_" + j);
-        }
-        listArrayList.add(stringList);
+List<String> stringList = new ArrayList<>();
+for (int j = 0; j < 2; j++) {
+    stringList.add("A_" + j);
+}
+listArrayList.add(stringList);
 
-        stringList = new ArrayList<>();
-        for (int j = 0; j < 2; j++) {
-            stringList.add("B_" + j);
-        }
-        listArrayList.add(stringList);
+stringList = new ArrayList<>();
+for (int j = 0; j < 2; j++) {
+    stringList.add("B_" + j);
+}
+listArrayList.add(stringList);
 
-        Observable.fromIterable(listArrayList).flatMap(new Function<List<String>, ObservableSource<String>>() {
-            @Override
-            public ObservableSource<String> apply(List<String> stringList1) throws Exception {
-                return Observable.fromIterable(stringList1);
-            }
-        }).subscribe(new Consumer<String>() {
-            @Override
-            public void accept(String s) throws Exception {
-                Log.e(TAG, "value is: " + s);
-            }
-        });
+Observable.fromIterable(listArrayList).flatMap(new Function<List<String>, ObservableSource<String>>() {
+    @Override
+    public ObservableSource<String> apply(List<String> stringList1) throws Exception {
+        return Observable.fromIterable(stringList1);
+    }
+}).subscribe(new Consumer<String>() {
+    @Override
+    public void accept(String s) throws Exception {
+        Log.e(TAG, "value is: " + s);
+    }
+});
 ```
 
 ```java
@@ -571,32 +571,32 @@ Observable.fromIterable(listArrayList).flatMap(new Function<List<String>, Observ
 从需要发送的事件当中获取指定数量的事件，并将这些事件放到缓冲区当中一并发出。`buffer` 有两个参数，参数一`count`用于指点缓冲区大小，参数二 `skip`用指定当缓冲区满了时，发送下一次事件序列的时候要跳过多少元素
 
 ```java
-			Observable.just(1, 2, 3, 4, 5, 6)
-                .buffer(2, 2)
-                .subscribe(new Observer<List<Integer>>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
-                        Log.e(TAG, "onSubscribe");
-                    }
+Observable.just(1, 2, 3, 4, 5, 6)
+    .buffer(2, 2)
+    .subscribe(new Observer<List<Integer>>() {
+        @Override
+        public void onSubscribe(Disposable d) {
+            Log.e(TAG, "onSubscribe");
+        }
 
-                    @Override
-                    public void onNext(List<Integer> integers) {
-                        Log.e(TAG, "缓冲区大小： " + integers.size());
-                        for (Integer i : integers) {
-                            Log.e(TAG, "元素： " + i);
-                        }
-                    }
+        @Override
+        public void onNext(List<Integer> integers) {
+            Log.e(TAG, "缓冲区大小： " + integers.size());
+            for (Integer i : integers) {
+                Log.e(TAG, "元素： " + i);
+            }
+        }
 
-                    @Override
-                    public void onError(Throwable e) {
-                        Log.e(TAG, "onError: " + e.getMessage());
-                    }
+        @Override
+        public void onError(Throwable e) {
+            Log.e(TAG, "onError: " + e.getMessage());
+        }
 
-                    @Override
-                    public void onComplete() {
-                        Log.e(TAG, "onComplete");
-                    }
-                });
+        @Override
+        public void onComplete() {
+            Log.e(TAG, "onComplete");
+        }
+    });
 ```
 
 ```java
@@ -618,58 +618,58 @@ Observable.fromIterable(listArrayList).flatMap(new Function<List<String>, Observ
 用于将数据进行分组，每个分组都会返回一个被观察者。`groupBy()` 方法的返回值用于指定分组名，每返回一个新值就代表会创建一个分组
 
 ```java
- 			Observable.just(1, 2, 3, 4, 5, 6, 7)
-                .groupBy(new Function<Integer, String>() {
-                    @Override
-                    public String apply(Integer integer) {
-                        if (integer < 4) {
-                            return "hello";
-                        }
-                        return "hi";
-                    }
-                })
-                .subscribe(new Observer<GroupedObservable<String, Integer>>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
-                        Log.e(TAG, "onSubscribe");
-                    }
+Observable.just(1, 2, 3, 4, 5, 6, 7)
+    .groupBy(new Function<Integer, String>() {
+        @Override
+        public String apply(Integer integer) {
+            if (integer < 4) {
+                return "hello";
+            }
+            return "hi";
+        }
+    })
+    .subscribe(new Observer<GroupedObservable<String, Integer>>() {
+        @Override
+        public void onSubscribe(Disposable d) {
+            Log.e(TAG, "onSubscribe");
+        }
 
-                    @Override
-                    public void onNext(final GroupedObservable<String, Integer> observable) {
-                        observable.subscribe(new Observer<Integer>() {
-                            @Override
-                            public void onSubscribe(Disposable d) {
-                                Log.e(TAG, "GroupedObservable onSubscribe");
-                            }
+    @Override
+    public void onNext(final GroupedObservable<String, Integer> observable) {
+        observable.subscribe(new Observer<Integer>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+                Log.e(TAG, "GroupedObservable onSubscribe");
+            }
 
-                            @Override
-                            public void onNext(Integer integer) {
-                                Log.e(TAG, "GroupedObservable onNext key :" + observable.getKey());
-                                Log.e(TAG, "GroupedObservable onNext value :" + integer);
-                            }
+            @Override
+            public void onNext(Integer integer) {
+                Log.e(TAG, "GroupedObservable onNext key :" + observable.getKey());
+                Log.e(TAG, "GroupedObservable onNext value :" + integer);
+            }
 
-                            @Override
-                            public void onError(Throwable e) {
-                                Log.e(TAG, "GroupedObservable onError");
-                            }
+            @Override
+            public void onError(Throwable e) {
+                Log.e(TAG, "GroupedObservable onError");
+            }
 
-                            @Override
-                            public void onComplete() {
-                                Log.e(TAG, "GroupedObservable onComplete");
-                            }
-                        });
-                    }
+            @Override
+            public void onComplete() {
+                Log.e(TAG, "GroupedObservable onComplete");
+            }
+        });
+    }
 
-                    @Override
-                    public void onError(Throwable e) {
-                        Log.e(TAG, "onError");
-                    }
+    @Override
+    public void onError(Throwable e) {
+        Log.e(TAG, "onError");
+    }
 
-                    @Override
-                    public void onComplete() {
-                        Log.e(TAG, "onComplete");
-                    }
-                });
+    @Override
+    public void onComplete() {
+        Log.e(TAG, "onComplete");
+    }
+});
 ```
 
 ```java
@@ -700,19 +700,19 @@ Observable.fromIterable(listArrayList).flatMap(new Function<List<String>, Observ
 `scan()` 操作符对原始 `Observable` 发射的第一条数据应用一个函数，然后将那个函数的结果作为自己的第一项数据发射。它将函数的结果同第二项数据一起填充给这个函数来产生它自己的第二项数据。它持续进行这个过程来产生剩余的数据序列
 
 ```java
-		Observable.just(1, 5, 8, 12).scan(new BiFunction<Integer, Integer, Integer>() {
-            @Override
-            public Integer apply(Integer integer, Integer integer2) {
-                Log.e(TAG, "integer : " + integer);
-                Log.e(TAG, "integer2 : " + integer2);
-                return integer + integer2;
-            }
-        }).subscribe(new Consumer<Integer>() {
-            @Override
-            public void accept(Integer integer) {
-                Log.e(TAG, "accept : " + integer);
-            }
-        });
+Observable.just(1, 5, 8, 12).scan(new BiFunction<Integer, Integer, Integer>() {
+    @Override
+    public Integer apply(Integer integer, Integer integer2) {
+        Log.e(TAG, "integer : " + integer);
+        Log.e(TAG, "integer2 : " + integer2);
+        return integer + integer2;
+    }
+}).subscribe(new Consumer<Integer>() {
+    @Override
+    public void accept(Integer integer) {
+        Log.e(TAG, "accept : " + integer);
+    }
+});
 ```
 
 ```java
@@ -735,15 +735,15 @@ Observable.fromIterable(listArrayList).flatMap(new Function<List<String>, Observ
 用于将多个观察者组合在一起，然后按照参数的传入顺序发送事件，`concat()` 最多只可以发送4个事件
 
 ```java
-		Observable.concat(Observable.just(1, 2),
-                Observable.just(3, 4),
-                Observable.just(5, 6),
-                Observable.just(7, 8)).subscribe(new Consumer<Integer>() {
-            @Override
-            public void accept(Integer integer) throws Exception {
-                Log.e(TAG, "accept: " + integer);
-            }
-        });
+Observable.concat(Observable.just(1, 2),
+        Observable.just(3, 4),
+        Observable.just(5, 6),
+        Observable.just(7, 8)).subscribe(new Consumer<Integer>() {
+    @Override
+    public void accept(Integer integer) throws Exception {
+        Log.e(TAG, "accept: " + integer);
+    }
+});
 ```
 
 ```java
@@ -764,23 +764,23 @@ accept: 8
 这个方法与 `concat()` 作用基本一样，只是 `concat()` 是串行发送事件，而 `merge()` 并行发送事件
 
 ```java
-	Observable.merge(Observable.interval(1, TimeUnit.SECONDS).map(new Function<Long, String>() {
-                    @Override
-                    public String apply(Long aLong) {
-                        return "Test_A_" + aLong;
-                    }
-                }),
-                Observable.interval(1, TimeUnit.SECONDS).map(new Function<Long, String>() {
-                    @Override
-                    public String apply(Long aLong) {
-                        return "Test_B_" + aLong;
-                    }
-                })).subscribe(new Consumer<String>() {
-            @Override
-            public void accept(String s) {
-                Log.e(TAG, "accept: " + s);
-            }
-        });
+Observable.merge(Observable.interval(1, TimeUnit.SECONDS).map(new Function<Long, String>() {
+        @Override
+        public String apply(Long aLong) {
+            return "Test_A_" + aLong;
+        }
+    }),
+    Observable.interval(1, TimeUnit.SECONDS).map(new Function<Long, String>() {
+        @Override
+        public String apply(Long aLong) {
+            return "Test_B_" + aLong;
+        }
+    })).subscribe(new Consumer<String>() {
+@Override
+public void accept(String s) {
+    Log.e(TAG, "accept: " + s);
+}
+});
 ```
 
 ```java
@@ -808,33 +808,33 @@ Test_B_5
 
 ```java
 Observable.concatArray(Observable.create(new ObservableOnSubscribe<Integer>() {
-            @Override
-            public void subscribe(ObservableEmitter<Integer> emitter) {
-                emitter.onNext(1);
-                emitter.onNext(2);
-                emitter.onError(new Exception("Normal Exception"));
-            }
-        }), Observable.just(30, 40, 50)).subscribe(new Observer<Integer>() {
-            @Override
-            public void onSubscribe(Disposable d) {
+        @Override
+        public void subscribe(ObservableEmitter<Integer> emitter) {
+            emitter.onNext(1);
+            emitter.onNext(2);
+            emitter.onError(new Exception("Normal Exception"));
+        }
+    }), Observable.just(30, 40, 50)).subscribe(new Observer<Integer>() {
+        @Override
+        public void onSubscribe(Disposable d) {
 
-            }
+        }
 
-            @Override
-            public void onNext(Integer integer) {
-                Log.e(TAG, "onNext: " + integer);
-            }
+        @Override
+        public void onNext(Integer integer) {
+            Log.e(TAG, "onNext: " + integer);
+        }
 
-            @Override
-            public void onError(Throwable e) {
-                Log.e(TAG, "onError: " + e.getMessage());
-            }
+        @Override
+        public void onError(Throwable e) {
+            Log.e(TAG, "onError: " + e.getMessage());
+        }
 
-            @Override
-            public void onComplete() {
+        @Override
+        public void onComplete() {
 
-            }
-        });
+        }
+    });
 ```
 
 ```java
@@ -861,19 +861,19 @@ onError: Normal Exception
 `zip()` 操作符返回一个 `Obversable`，它使用这个函数按顺序结合两个或多个 Observables 发射的数据项，然后它发射这个函数返回的结果。它按照严格的顺序应用这个函数。它只发射与发射数据项最少的那个 Observable 一样多的数据
 
 ```java
-		Observable.zip(Observable.just(1, 2, 3, 4), Observable.just(5, 6, 7, 8, 9),
-                new BiFunction<Integer, Integer, String>() {
-                    @Override
-                    public String apply(Integer integer, Integer integer2) throws Exception {
-                        return String.valueOf(integer) + "_" + String.valueOf(integer2);
-                    }
-                })
-                .subscribe(new Consumer<String>() {
-                    @Override
-                    public void accept(String s) throws Exception {
-                        Log.e(TAG, "accept: " + s);
-                    }
-                });
+Observable.zip(Observable.just(1, 2, 3, 4), Observable.just(5, 6, 7, 8, 9),
+    new BiFunction<Integer, Integer, String>() {
+        @Override
+        public String apply(Integer integer, Integer integer2) throws Exception {
+            return String.valueOf(integer) + "_" + String.valueOf(integer2);
+        }
+    })
+    .subscribe(new Consumer<String>() {
+        @Override
+        public void accept(String s) throws Exception {
+            Log.e(TAG, "accept: " + s);
+        }
+    });
 ```
 
 ```java
@@ -889,35 +889,35 @@ accept: 4_8
 
 ```java
 Observable.zip(
-               Observable.intervalRange(1, 4, 1, 1, TimeUnit.SECONDS)
-                        .map(new Function<Long, String>() {
-                            @Override
-                            public String apply(Long aLong) {
-                                String s1 = "A" + aLong;
-                                Log.e(TAG, "A 发送的事件 " + s1);
-                                return s1;
-                            }
-                        }), Observable.intervalRange(1, 4, 2, 1, TimeUnit.SECONDS)
-                        .map(new Function<Long, String>() {
-                            @Override
-                            public String apply(Long aLong) {
-                                String s1 = "B" + aLong;
-                                Log.e(TAG, "B 发送的事件 " + s1);
-                                return s1;
-                            }
-                        }),
-                new BiFunction<String, String, String>() {
-                    @Override
-                    public String apply(String value1, String value2) throws Exception {
-                        return value1 + "_" + value2;
-                    }
-                })
-                .subscribe(new Consumer<String>() {
-                    @Override
-                    public void accept(String s) throws Exception {
-                        Log.e(TAG, "accept: " + s);
-                    }
-                });
+   Observable.intervalRange(1, 4, 1, 1, TimeUnit.SECONDS)
+            .map(new Function<Long, String>() {
+                @Override
+                public String apply(Long aLong) {
+                    String s1 = "A" + aLong;
+                    Log.e(TAG, "A 发送的事件 " + s1);
+                    return s1;
+                }
+            }), Observable.intervalRange(1, 4, 2, 1, TimeUnit.SECONDS)
+            .map(new Function<Long, String>() {
+                @Override
+                public String apply(Long aLong) {
+                    String s1 = "B" + aLong;
+                    Log.e(TAG, "B 发送的事件 " + s1);
+                    return s1;
+                }
+            }),
+    new BiFunction<String, String, String>() {
+        @Override
+        public String apply(String value1, String value2) throws Exception {
+            return value1 + "_" + value2;
+        }
+    })
+    .subscribe(new Consumer<String>() {
+        @Override
+        public void accept(String s) throws Exception {
+            Log.e(TAG, "accept: " + s);
+        }
+    });
 ```
 
 ```java
@@ -945,18 +945,18 @@ Observable.zip(
 
 ```java
 Observable.just(1, 3, 5, 7).reduce(new BiFunction<Integer, Integer, Integer>() {
-            @Override
-            public Integer apply(Integer integer, Integer integer2) throws Exception {
-                Log.e(TAG, "integer1 : " + integer);
-                Log.e(TAG, "integer2 : " + integer2);
-                return integer + integer2;
-            }
-        }).subscribe(new Consumer<Integer>() {
-            @Override
-            public void accept(Integer integer) throws Exception {
-                Log.e(TAG, "accept : " + integer);
-            }
-        });
+    @Override
+    public Integer apply(Integer integer, Integer integer2) throws Exception {
+        Log.e(TAG, "integer1 : " + integer);
+        Log.e(TAG, "integer2 : " + integer2);
+        return integer + integer2;
+    }
+}).subscribe(new Consumer<Integer>() {
+    @Override
+    public void accept(Integer integer) throws Exception {
+        Log.e(TAG, "accept : " + integer);
+    }
+});
 ```
 
 ```java
@@ -975,23 +975,23 @@ accept : 16
 
 ```java
 Observable.just(1, 2, 3, 4)
-                .collect(new Callable<ArrayList<Integer>>() {
-                    @Override
-                    public ArrayList<Integer> call() throws Exception {
-                        return new ArrayList<>();
-                    }
-                }, new BiConsumer<ArrayList<Integer>, Integer>() {
-                    @Override
-                    public void accept(ArrayList<Integer> integers, Integer integer) throws Exception {
-                        integers.add(integer);
-                    }
-                })
-                .subscribe(new Consumer<ArrayList<Integer>>() {
-                    @Override
-                    public void accept(ArrayList<Integer> integers) throws Exception {
-                        Log.e(TAG, "accept : " + integers);
-                    }
-                });
+    .collect(new Callable<ArrayList<Integer>>() {
+        @Override
+        public ArrayList<Integer> call() throws Exception {
+            return new ArrayList<>();
+        }
+    }, new BiConsumer<ArrayList<Integer>, Integer>() {
+        @Override
+        public void accept(ArrayList<Integer> integers, Integer integer) throws Exception {
+            integers.add(integer);
+        }
+    })
+    .subscribe(new Consumer<ArrayList<Integer>>() {
+        @Override
+        public void accept(ArrayList<Integer> integers) throws Exception {
+            Log.e(TAG, "accept : " + integers);
+        }
+    });
 ```
 
 ```java
@@ -1003,15 +1003,15 @@ accept : [1, 2, 3, 4]
 在发送事件之前追加事件，`startWith()` 追加一个事件，`startWithArray()` 可以追加多个事件，追加的事件会先发出
 
 ```java
-        Observable.just(4, 5)
-                .startWithArray(2, 3)
-                .startWith(1)
-                .subscribe(new Consumer<Integer>() {
-                    @Override
-                    public void accept(Integer integer) throws Exception {
-                        Log.e(TAG, "accept : " + integer);
-                    }
-                });
+Observable.just(4, 5)
+    .startWithArray(2, 3)
+    .startWith(1)
+    .subscribe(new Consumer<Integer>() {
+        @Override
+        public void accept(Integer integer) throws Exception {
+            Log.e(TAG, "accept : " + integer);
+        }
+    });
 ```
 
 ```java
@@ -1027,14 +1027,14 @@ accept : [1, 2, 3, 4]
 返回被观察者发送事件的数量
 
 ```java
-        Observable.just(1, 2, 3)
-                .count()
-                .subscribe(new Consumer<Long>() {
-                    @Override
-                    public void accept(Long aLong) throws Exception {
-                        Log.e(TAG, "aLong : " + aLong);
-                    }
-                });
+Observable.just(1, 2, 3)
+    .count()
+    .subscribe(new Consumer<Long>() {
+        @Override
+        public void accept(Long aLong) throws Exception {
+            Log.e(TAG, "aLong : " + aLong);
+        }
+    });
 ```
 
 ```
@@ -1048,14 +1048,14 @@ aLong : 3
 延迟一段事件再发送事件
 
 ```java
-        Observable.just(1, 2, 3)
-                .delay(3, TimeUnit.SECONDS)
-                .subscribe(new Consumer<Integer>() {
-                    @Override
-                    public void accept(Integer value) throws Exception {
-                        Log.e(TAG, "value : " + value);
-                    }
-                });
+Observable.just(1, 2, 3)
+    .delay(3, TimeUnit.SECONDS)
+    .subscribe(new Consumer<Integer>() {
+        @Override
+        public void accept(Integer value) throws Exception {
+            Log.e(TAG, "value : " + value);
+        }
+    });
 ```
 
 #### 5.2、doOnEach()
@@ -1064,18 +1064,18 @@ aLong : 3
 
 ```java
 Observable.just(1, 2, 3)
-                .doOnEach(new Consumer<Notification<Integer>>() {
-                    @Override
-                    public void accept(Notification<Integer> integerNotification) throws Exception {
-                        Log.e(TAG, "integerNotification value : " + integerNotification.getValue());
-                    }
-                })
-                .subscribe(new Consumer<Integer>() {
-                    @Override
-                    public void accept(Integer value) throws Exception {
-                        Log.e(TAG, "accept : " + value);
-                    }
-                });
+    .doOnEach(new Consumer<Notification<Integer>>() {
+        @Override
+        public void accept(Notification<Integer> integerNotification) throws Exception {
+            Log.e(TAG, "integerNotification value : " + integerNotification.getValue());
+        }
+    })
+    .subscribe(new Consumer<Integer>() {
+        @Override
+        public void accept(Integer value) throws Exception {
+            Log.e(TAG, "accept : " + value);
+        }
+    });
 ```
 
 ```java
@@ -1094,18 +1094,18 @@ Observable.just(1, 2, 3)
 
 ```java
 Observable.just(1, 2, 3)
-                .doOnNext(new Consumer<Integer>() {
-                    @Override
-                    public void accept(Integer integer) throws Exception {
-                        Log.e(TAG, "doOnNext accept : " + integer);
-                    }
-                })
-                .subscribe(new Consumer<Integer>() {
-                    @Override
-                    public void accept(Integer value) throws Exception {
-                        Log.e(TAG, "accept : " + value);
-                    }
-                });
+    .doOnNext(new Consumer<Integer>() {
+        @Override
+        public void accept(Integer integer) throws Exception {
+            Log.e(TAG, "doOnNext accept : " + integer);
+        }
+    })
+    .subscribe(new Consumer<Integer>() {
+        @Override
+        public void accept(Integer value) throws Exception {
+            Log.e(TAG, "accept : " + value);
+        }
+    });
 ```
 
 ```java
@@ -1123,18 +1123,18 @@ Observable.just(1, 2, 3)
 
 ```java
 Observable.just(1, 2, 3)
-                .doAfterNext(new Consumer<Integer>() {
-                    @Override
-                    public void accept(Integer integer) throws Exception {
-                        Log.e(TAG, "doOnNext accept : " + integer);
-                    }
-                })
-                .subscribe(new Consumer<Integer>() {
-                    @Override
-                    public void accept(Integer value) throws Exception {
-                        Log.e(TAG, "accept : " + value);
-                    }
-                });
+    .doAfterNext(new Consumer<Integer>() {
+        @Override
+        public void accept(Integer integer) throws Exception {
+            Log.e(TAG, "doOnNext accept : " + integer);
+        }
+    })
+    .subscribe(new Consumer<Integer>() {
+        @Override
+        public void accept(Integer value) throws Exception {
+            Log.e(TAG, "accept : " + value);
+        }
+    });
 ```
 
 ```java
@@ -1152,18 +1152,18 @@ Observable.just(1, 2, 3)
 
 ```java
 Observable.just(1, 2, 3)
-                .doOnComplete(new Action() {
-                    @Override
-                    public void run() throws Exception {
-                        Log.e(TAG, "doOnComplete run()");
-                    }
-                })
-                .subscribe(new Consumer<Integer>() {
-                    @Override
-                    public void accept(Integer value) throws Exception {
-                        Log.e(TAG, "accept : " + value);
-                    }
-                });
+    .doOnComplete(new Action() {
+        @Override
+        public void run() throws Exception {
+            Log.e(TAG, "doOnComplete run()");
+        }
+    })
+    .subscribe(new Consumer<Integer>() {
+        @Override
+        public void accept(Integer value) throws Exception {
+            Log.e(TAG, "accept : " + value);
+        }
+    });
 ```
 
 ```java
@@ -1179,38 +1179,38 @@ Observable.just(1, 2, 3)
 
 ```java
 Observable.create(new ObservableOnSubscribe<Integer>() {
-            @Override
-            public void subscribe(ObservableEmitter<Integer> emitter) throws Exception {
-                emitter.onNext(1);
-                emitter.onNext(2);
-                emitter.onError(new Exception("Normal Exception"));
-            }
-        }).doOnError(new Consumer<Throwable>() {
-            @Override
-            public void accept(Throwable throwable) throws Exception {
-                Log.e(TAG, "doOnError accept() : " + throwable.getMessage());
-            }
-        }).subscribe(new Observer<Integer>() {
-            @Override
-            public void onSubscribe(Disposable d) {
+    @Override
+    public void subscribe(ObservableEmitter<Integer> emitter) throws Exception {
+        emitter.onNext(1);
+        emitter.onNext(2);
+        emitter.onError(new Exception("Normal Exception"));
+    }
+}).doOnError(new Consumer<Throwable>() {
+    @Override
+    public void accept(Throwable throwable) throws Exception {
+        Log.e(TAG, "doOnError accept() : " + throwable.getMessage());
+    }
+}).subscribe(new Observer<Integer>() {
+    @Override
+    public void onSubscribe(Disposable d) {
 
-            }
+    }
 
-            @Override
-            public void onNext(Integer integer) {
-                Log.e(TAG, "onNext : " + integer);
-            }
+    @Override
+    public void onNext(Integer integer) {
+        Log.e(TAG, "onNext : " + integer);
+    }
 
-            @Override
-            public void onError(Throwable e) {
-                Log.e(TAG, "onError : " + e.getMessage());
-            }
+    @Override
+    public void onError(Throwable e) {
+        Log.e(TAG, "onError : " + e.getMessage());
+    }
 
-            @Override
-            public void onComplete() {
+    @Override
+    public void onComplete() {
 
-            }
-        });
+    }
+});
 ```
 
 ```java
@@ -1234,48 +1234,48 @@ Observable.create(new ObservableOnSubscribe<Integer>() {
 
 ```java
 Observable.create(new ObservableOnSubscribe<Integer>() {
-            @Override
-            public void subscribe(ObservableEmitter<Integer> emitter) throws Exception {
-                emitter.onNext(1);
-                emitter.onNext(2);
-                emitter.onComplete();
-            }
-        }).doOnLifecycle(new Consumer<Disposable>() {
-            @Override
-            public void accept(Disposable disposable) throws Exception {
-                Log.e(TAG, "doOnLifecycle accept");
-            }
-        }, new Action() {
-            @Override
-            public void run() throws Exception {
-                Log.e(TAG, "doOnLifecycle run");
-            }
-        }).subscribe(new Observer<Integer>() {
+    @Override
+    public void subscribe(ObservableEmitter<Integer> emitter) throws Exception {
+        emitter.onNext(1);
+        emitter.onNext(2);
+        emitter.onComplete();
+    }
+}).doOnLifecycle(new Consumer<Disposable>() {
+    @Override
+    public void accept(Disposable disposable) throws Exception {
+        Log.e(TAG, "doOnLifecycle accept");
+    }
+}, new Action() {
+    @Override
+    public void run() throws Exception {
+        Log.e(TAG, "doOnLifecycle run");
+    }
+}).subscribe(new Observer<Integer>() {
 
-            private Disposable disposable;
+    private Disposable disposable;
 
-            @Override
-            public void onSubscribe(Disposable d) {
-                Log.e(TAG, "onSubscribe");
-                this.disposable = d;
-            }
+    @Override
+    public void onSubscribe(Disposable d) {
+        Log.e(TAG, "onSubscribe");
+        this.disposable = d;
+    }
 
-            @Override
-            public void onNext(Integer integer) {
-                Log.e(TAG, "onNext : " + integer);
-                disposable.dispose();
-            }
+    @Override
+    public void onNext(Integer integer) {
+        Log.e(TAG, "onNext : " + integer);
+        disposable.dispose();
+    }
 
-            @Override
-            public void onError(Throwable e) {
-                Log.e(TAG, "onError : " + e.getMessage());
-            }
+    @Override
+    public void onError(Throwable e) {
+        Log.e(TAG, "onError : " + e.getMessage());
+    }
 
-            @Override
-            public void onComplete() {
-                Log.e(TAG, "onComplete");
-            }
-        });
+    @Override
+    public void onComplete() {
+        Log.e(TAG, "onComplete");
+    }
+});
 ```
 
 ```java
@@ -1291,44 +1291,44 @@ Observable.create(new ObservableOnSubscribe<Integer>() {
 
 ```java
 Observable.create(new ObservableOnSubscribe<Integer>() {
-            @Override
-            public void subscribe(ObservableEmitter<Integer> emitter) throws Exception {
-                emitter.onNext(1);
-                emitter.onNext(2);
-                emitter.onComplete();
-            }
-        }).doOnTerminate(new Action() {
-            @Override
-            public void run() throws Exception {
-                Log.e(TAG, "doOnTerminate run");
-            }
-        }).doAfterTerminate(new Action() {
-            @Override
-            public void run() throws Exception {
-                Log.e(TAG, "doAfterTerminate run");
-            }
-        }).subscribe(new Observer<Integer>() {
+    @Override
+    public void subscribe(ObservableEmitter<Integer> emitter) throws Exception {
+        emitter.onNext(1);
+        emitter.onNext(2);
+        emitter.onComplete();
+    }
+}).doOnTerminate(new Action() {
+    @Override
+    public void run() throws Exception {
+        Log.e(TAG, "doOnTerminate run");
+    }
+}).doAfterTerminate(new Action() {
+    @Override
+    public void run() throws Exception {
+        Log.e(TAG, "doAfterTerminate run");
+    }
+}).subscribe(new Observer<Integer>() {
 
-            @Override
-            public void onSubscribe(Disposable d) {
-                Log.e(TAG, "onSubscribe");
-            }
+    @Override
+    public void onSubscribe(Disposable d) {
+        Log.e(TAG, "onSubscribe");
+    }
 
-            @Override
-            public void onNext(Integer integer) {
-                Log.e(TAG, "onNext : " + integer);
-            }
+    @Override
+    public void onNext(Integer integer) {
+        Log.e(TAG, "onNext : " + integer);
+    }
 
-            @Override
-            public void onError(Throwable e) {
-                Log.e(TAG, "onError : " + e.getMessage());
-            }
+    @Override
+    public void onError(Throwable e) {
+        Log.e(TAG, "onError : " + e.getMessage());
+    }
 
-            @Override
-            public void onComplete() {
-                Log.e(TAG, "onComplete");
-            }
-        });
+    @Override
+    public void onComplete() {
+        Log.e(TAG, "onComplete");
+    }
+});
 ```
 
 ```java
@@ -1350,39 +1350,39 @@ Observable.create(new ObservableOnSubscribe<Integer>() {
 
 ```java
 Observable.create(new ObservableOnSubscribe<Integer>() {
-            @Override
-            public void subscribe(ObservableEmitter<Integer> emitter) throws Exception {
-                emitter.onNext(1);
-                emitter.onNext(2);
-                emitter.onError(new Exception("Normal Exception"));
-            }
-        }).onErrorReturn(new Function<Throwable, Integer>() {
-            @Override
-            public Integer apply(Throwable throwable) throws Exception {
-                return 7;
-            }
-        }).subscribe(new Observer<Integer>() {
+    @Override
+    public void subscribe(ObservableEmitter<Integer> emitter) throws Exception {
+        emitter.onNext(1);
+        emitter.onNext(2);
+        emitter.onError(new Exception("Normal Exception"));
+    }
+}).onErrorReturn(new Function<Throwable, Integer>() {
+    @Override
+    public Integer apply(Throwable throwable) throws Exception {
+        return 7;
+    }
+}).subscribe(new Observer<Integer>() {
 
-            @Override
-            public void onSubscribe(Disposable d) {
-                Log.e(TAG, "onSubscribe");
-            }
+    @Override
+    public void onSubscribe(Disposable d) {
+        Log.e(TAG, "onSubscribe");
+    }
 
-            @Override
-            public void onNext(Integer integer) {
-                Log.e(TAG, "onNext : " + integer);
-            }
+    @Override
+    public void onNext(Integer integer) {
+        Log.e(TAG, "onNext : " + integer);
+    }
 
-            @Override
-            public void onError(Throwable e) {
-                Log.e(TAG, "onError : " + e.getMessage());
-            }
+    @Override
+    public void onError(Throwable e) {
+        Log.e(TAG, "onError : " + e.getMessage());
+    }
 
-            @Override
-            public void onComplete() {
-                Log.e(TAG, "onComplete");
-            }
-        });
+    @Override
+    public void onComplete() {
+        Log.e(TAG, "onComplete");
+    }
+});
 ```
 
 ```java
@@ -1399,40 +1399,40 @@ Observable.create(new ObservableOnSubscribe<Integer>() {
 
 ```java
 Observable.create(new ObservableOnSubscribe<Integer>() {
-            @Override
-            public void subscribe(ObservableEmitter<Integer> emitter) throws Exception {
-                emitter.onNext(1);
-                emitter.onNext(2);
-                emitter.onError(new Exception("Normal Exception"));
-            }
-        }).onErrorResumeNext(new Function<Throwable, ObservableSource<? extends Integer>>() {
-            @Override
-            public ObservableSource<? extends Integer> apply(Throwable throwable) throws Exception {
-                Log.e(TAG, "onErrorResumeNext apply: " + throwable.getMessage());
-                return Observable.just(4, 5, 6);
-            }
-        }).subscribe(new Observer<Integer>() {
+    @Override
+    public void subscribe(ObservableEmitter<Integer> emitter) throws Exception {
+        emitter.onNext(1);
+        emitter.onNext(2);
+        emitter.onError(new Exception("Normal Exception"));
+    }
+}).onErrorResumeNext(new Function<Throwable, ObservableSource<? extends Integer>>() {
+    @Override
+    public ObservableSource<? extends Integer> apply(Throwable throwable) throws Exception {
+        Log.e(TAG, "onErrorResumeNext apply: " + throwable.getMessage());
+        return Observable.just(4, 5, 6);
+    }
+}).subscribe(new Observer<Integer>() {
 
-            @Override
-            public void onSubscribe(Disposable d) {
-                Log.e(TAG, "onSubscribe");
-            }
+    @Override
+    public void onSubscribe(Disposable d) {
+        Log.e(TAG, "onSubscribe");
+    }
 
-            @Override
-            public void onNext(Integer integer) {
-                Log.e(TAG, "onNext : " + integer);
-            }
+    @Override
+    public void onNext(Integer integer) {
+        Log.e(TAG, "onNext : " + integer);
+    }
 
-            @Override
-            public void onError(Throwable e) {
-                Log.e(TAG, "onError : " + e.getMessage());
-            }
+    @Override
+    public void onError(Throwable e) {
+        Log.e(TAG, "onError : " + e.getMessage());
+    }
 
-            @Override
-            public void onComplete() {
-                Log.e(TAG, "onComplete");
-            }
-        });
+    @Override
+    public void onComplete() {
+        Log.e(TAG, "onComplete");
+    }
+});
 ```
 
 ```java
@@ -1515,34 +1515,34 @@ Observable.create(new ObservableOnSubscribe<Integer>() {
 
 ```java
 Observable.create(new ObservableOnSubscribe<Integer>() {
-            @Override
-            public void subscribe(ObservableEmitter<Integer> emitter) throws Exception {
-                emitter.onNext(1);
-                emitter.onNext(2);
-                emitter.onError(new Error("Normal Exception"));
-            }
-        }).retry(2).subscribe(new Observer<Integer>() {
+    @Override
+    public void subscribe(ObservableEmitter<Integer> emitter) throws Exception {
+        emitter.onNext(1);
+        emitter.onNext(2);
+        emitter.onError(new Error("Normal Exception"));
+    }
+}).retry(2).subscribe(new Observer<Integer>() {
 
-            @Override
-            public void onSubscribe(Disposable d) {
-                Log.e(TAG, "onSubscribe");
-            }
+    @Override
+    public void onSubscribe(Disposable d) {
+        Log.e(TAG, "onSubscribe");
+    }
 
-            @Override
-            public void onNext(Integer integer) {
-                Log.e(TAG, "onNext : " + integer);
-            }
+    @Override
+    public void onNext(Integer integer) {
+        Log.e(TAG, "onNext : " + integer);
+    }
 
-            @Override
-            public void onError(Throwable e) {
-                Log.e(TAG, "onError : " + e.getMessage());
-            }
+    @Override
+    public void onError(Throwable e) {
+        Log.e(TAG, "onError : " + e.getMessage());
+    }
 
-            @Override
-            public void onComplete() {
-                Log.e(TAG, "onComplete");
-            }
-        });
+    @Override
+    public void onComplete() {
+        Log.e(TAG, "onComplete");
+    }
+});
 ```
 
 ```java
@@ -1561,44 +1561,44 @@ Observable.create(new ObservableOnSubscribe<Integer>() {
 出现错误事件之后，可以通过此方法判断是否继续发送事件
 
 ```java
-    private int index = 1;
+private int index = 1;
 
 Observable.create(new ObservableOnSubscribe<Integer>() {
-            @Override
-            public void subscribe(ObservableEmitter<Integer> emitter) throws Exception {
-                emitter.onNext(1);
-                emitter.onNext(2);
-                emitter.onError(new Exception("Normal Exception"));
-            }
-        }).retryUntil(new BooleanSupplier() {
-            @Override
-            public boolean getAsBoolean() throws Exception {
-                Log.e(TAG, "getAsBoolean");
-                return index == 7;
-            }
-        }).subscribe(new Observer<Integer>() {
+    @Override
+    public void subscribe(ObservableEmitter<Integer> emitter) throws Exception {
+        emitter.onNext(1);
+        emitter.onNext(2);
+        emitter.onError(new Exception("Normal Exception"));
+    }
+}).retryUntil(new BooleanSupplier() {
+    @Override
+    public boolean getAsBoolean() throws Exception {
+        Log.e(TAG, "getAsBoolean");
+        return index == 7;
+    }
+}).subscribe(new Observer<Integer>() {
 
-            @Override
-            public void onSubscribe(Disposable d) {
-                Log.e(TAG, "onSubscribe");
-            }
+    @Override
+    public void onSubscribe(Disposable d) {
+        Log.e(TAG, "onSubscribe");
+    }
 
-            @Override
-            public void onNext(Integer integer) {
-                Log.e(TAG, "onNext : " + integer);
-                index++;
-            }
+    @Override
+    public void onNext(Integer integer) {
+        Log.e(TAG, "onNext : " + integer);
+        index++;
+    }
 
-            @Override
-            public void onError(Throwable e) {
-                Log.e(TAG, "onError : " + e.getMessage());
-            }
+    @Override
+    public void onError(Throwable e) {
+        Log.e(TAG, "onError : " + e.getMessage());
+    }
 
-            @Override
-            public void onComplete() {
-                Log.e(TAG, "onComplete");
-            }
-        });
+    @Override
+    public void onComplete() {
+        Log.e(TAG, "onComplete");
+    }
+});
 ```
 
 ```java
@@ -1621,34 +1621,34 @@ Observable.create(new ObservableOnSubscribe<Integer>() {
 
 ```java
 Observable.create(new ObservableOnSubscribe<Integer>() {
-            @Override
-            public void subscribe(ObservableEmitter<Integer> emitter) throws Exception {
-                emitter.onNext(1);
-                emitter.onNext(2);
-                emitter.onComplete();
-            }
-        }).repeat(2).subscribe(new Observer<Integer>() {
+    @Override
+    public void subscribe(ObservableEmitter<Integer> emitter) throws Exception {
+        emitter.onNext(1);
+        emitter.onNext(2);
+        emitter.onComplete();
+    }
+}).repeat(2).subscribe(new Observer<Integer>() {
 
-            @Override
-            public void onSubscribe(Disposable d) {
-                Log.e(TAG, "onSubscribe");
-            }
+    @Override
+    public void onSubscribe(Disposable d) {
+        Log.e(TAG, "onSubscribe");
+    }
 
-            @Override
-            public void onNext(Integer integer) {
-                Log.e(TAG, "onNext : " + integer);
-            }
+    @Override
+    public void onNext(Integer integer) {
+        Log.e(TAG, "onNext : " + integer);
+    }
 
-            @Override
-            public void onError(Throwable e) {
-                Log.e(TAG, "onError : " + e.getMessage());
-            }
+    @Override
+    public void onError(Throwable e) {
+        Log.e(TAG, "onError : " + e.getMessage());
+    }
 
-            @Override
-            public void onComplete() {
-                Log.e(TAG, "onComplete");
-            }
-        });
+    @Override
+    public void onComplete() {
+        Log.e(TAG, "onComplete");
+    }
+});
 ```
 
 ```java
@@ -1666,42 +1666,42 @@ Observable.create(new ObservableOnSubscribe<Integer>() {
 
 ```java
 Observable.create(new ObservableOnSubscribe<Integer>() {
-            @Override
-            public void subscribe(ObservableEmitter<Integer> e) throws Exception {
-                e.onNext(1);
-                e.onNext(2);
-                e.onNext(3);
-                e.onComplete();
-            }
-        }).repeatWhen(new Function<Observable<Object>, ObservableSource<?>>() {
-            @Override
-            public ObservableSource<?> apply(Observable<Object> objectObservable) throws Exception {
+    @Override
+    public void subscribe(ObservableEmitter<Integer> e) throws Exception {
+        e.onNext(1);
+        e.onNext(2);
+        e.onNext(3);
+        e.onComplete();
+    }
+}).repeatWhen(new Function<Observable<Object>, ObservableSource<?>>() {
+    @Override
+    public ObservableSource<?> apply(Observable<Object> objectObservable) throws Exception {
 //                return Observable.empty();
 //                return Observable.error(new Exception("Normal Exception"));
 //                return Observable.just(1);
-            }
-        }).subscribe(new Observer<Integer>() {
+    }
+}).subscribe(new Observer<Integer>() {
 
-            @Override
-            public void onSubscribe(Disposable d) {
-                Log.e(TAG, "onSubscribe");
-            }
+    @Override
+    public void onSubscribe(Disposable d) {
+        Log.e(TAG, "onSubscribe");
+    }
 
-            @Override
-            public void onNext(Integer integer) {
-                Log.e(TAG, "onNext : " + integer);
-            }
+    @Override
+    public void onNext(Integer integer) {
+        Log.e(TAG, "onNext : " + integer);
+    }
 
-            @Override
-            public void onError(Throwable e) {
-                Log.e(TAG, "onError : " + e.getMessage());
-            }
+    @Override
+    public void onError(Throwable e) {
+        Log.e(TAG, "onError : " + e.getMessage());
+    }
 
-            @Override
-            public void onComplete() {
-                Log.e(TAG, "onComplete");
-            }
-        });
+    @Override
+    public void onComplete() {
+        Log.e(TAG, "onComplete");
+    }
+});
 ```
 
 以上三种情况的输出结果分别是
@@ -1732,36 +1732,36 @@ Observable.create(new ObservableOnSubscribe<Integer>() {
 
 ```java
 Observable.create(new ObservableOnSubscribe<Integer>() {
-            @Override
-            public void subscribe(ObservableEmitter<Integer> emitter) throws Exception {
-                Log.e(TAG, "Observable Thread Name:  " + Thread.currentThread().getName());
-                emitter.onNext(1);
-                emitter.onNext(2);
-                emitter.onComplete();
-            }
-        }).subscribeOn(Schedulers.newThread()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<Integer>() {
+    @Override
+    public void subscribe(ObservableEmitter<Integer> emitter) throws Exception {
+        Log.e(TAG, "Observable Thread Name:  " + Thread.currentThread().getName());
+        emitter.onNext(1);
+        emitter.onNext(2);
+        emitter.onComplete();
+    }
+}).subscribeOn(Schedulers.newThread()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<Integer>() {
 
-            @Override
-            public void onSubscribe(Disposable d) {
-                Log.e(TAG, "onSubscribe");
-                Log.e(TAG, "Observer Thread Name:  " + Thread.currentThread().getName());
-            }
+    @Override
+    public void onSubscribe(Disposable d) {
+        Log.e(TAG, "onSubscribe");
+        Log.e(TAG, "Observer Thread Name:  " + Thread.currentThread().getName());
+    }
 
-            @Override
-            public void onNext(Integer integer) {
-                Log.e(TAG, "onNext : " + integer);
-            }
+    @Override
+    public void onNext(Integer integer) {
+        Log.e(TAG, "onNext : " + integer);
+    }
 
-            @Override
-            public void onError(Throwable e) {
-                Log.e(TAG, "onError : " + e.getMessage());
-            }
+    @Override
+    public void onError(Throwable e) {
+        Log.e(TAG, "onError : " + e.getMessage());
+    }
 
-            @Override
-            public void onComplete() {
-                Log.e(TAG, "onComplete");
-            }
-        });
+    @Override
+    public void onComplete() {
+        Log.e(TAG, "onComplete");
+    }
+});
 ```
 
 ```java
@@ -1788,17 +1788,17 @@ Observable.create(new ObservableOnSubscribe<Integer>() {
 通过一定逻辑来过滤被观察者发送的事件，如果返回 `true` 则会发送事件，否则不会发送
 
 ```java
-        Observable.just(1, 2, 3, 4).filter(new Predicate<Integer>() {
-            @Override
-            public boolean test(Integer integer) throws Exception {
-                return integer % 2 == 0;
-            }
-        }).subscribe(new Consumer<Integer>() {
-            @Override
-            public void accept(Integer integer) throws Exception {
-                Log.e(TAG, "accept : " + integer);
-            }
-        });
+Observable.just(1, 2, 3, 4).filter(new Predicate<Integer>() {
+    @Override
+    public boolean test(Integer integer) throws Exception {
+        return integer % 2 == 0;
+    }
+}).subscribe(new Consumer<Integer>() {
+    @Override
+    public void accept(Integer integer) throws Exception {
+        Log.e(TAG, "accept : " + integer);
+    }
+});
 ```
 
 ```java
@@ -1811,12 +1811,12 @@ Observable.create(new ObservableOnSubscribe<Integer>() {
 过滤不符合该类型的事件
 
 ```java
-        Observable.just(1, 2, "Hi", 3, 4, "Hello").ofType(Integer.class).subscribe(new Consumer<Integer>() {
-            @Override
-            public void accept(Integer integer) throws Exception {
-                Log.e(TAG, "accept : " + integer);
-            }
-        });
+Observable.just(1, 2, "Hi", 3, 4, "Hello").ofType(Integer.class).subscribe(new Consumer<Integer>() {
+    @Override
+    public void accept(Integer integer) throws Exception {
+        Log.e(TAG, "accept : " + integer);
+    }
+});
 ```
 
 ```java
@@ -1831,12 +1831,12 @@ Observable.create(new ObservableOnSubscribe<Integer>() {
 以正序跳过指定数量的事件
 
 ```java
-        Observable.just(1, 2, 3, 4).skip(2).subscribe(new Consumer<Integer>() {
-            @Override
-            public void accept(Integer integer) throws Exception {
-                Log.e(TAG, "accept : " + integer);
-            }
-        });
+Observable.just(1, 2, 3, 4).skip(2).subscribe(new Consumer<Integer>() {
+    @Override
+    public void accept(Integer integer) throws Exception {
+        Log.e(TAG, "accept : " + integer);
+    }
+});
 ```
 
 ```java
@@ -1849,12 +1849,12 @@ Observable.create(new ObservableOnSubscribe<Integer>() {
 以反序跳过指定数量的事件
 
 ```java
-        Observable.just(1, 2, 3, 4).skipLast(2).subscribe(new Consumer<Integer>() {
-            @Override
-            public void accept(Integer integer) throws Exception {
-                Log.e(TAG, "accept : " + integer);
-            }
-        });
+Observable.just(1, 2, 3, 4).skipLast(2).subscribe(new Consumer<Integer>() {
+    @Override
+    public void accept(Integer integer) throws Exception {
+        Log.e(TAG, "accept : " + integer);
+    }
+});
 ```
 
 ```java
@@ -1867,12 +1867,12 @@ Observable.create(new ObservableOnSubscribe<Integer>() {
 过滤事件序列中的重复事件
 
 ```java
-        Observable.just(1, 2, 1, 2, 3, 4, 3).distinct().subscribe(new Consumer<Integer>() {
-            @Override
-            public void accept(Integer integer) throws Exception {
-                Log.e(TAG, "accept : " + integer);
-            }
-        });
+Observable.just(1, 2, 1, 2, 3, 4, 3).distinct().subscribe(new Consumer<Integer>() {
+    @Override
+    public void accept(Integer integer) throws Exception {
+        Log.e(TAG, "accept : " + integer);
+    }
+});
 ```
 
 ```java
@@ -1887,12 +1887,12 @@ Observable.create(new ObservableOnSubscribe<Integer>() {
 过滤掉连续重复的事件
 
 ```java
-        Observable.just(1, 2, 2, 1, 3, 4, 3, 3).distinctUntilChanged().subscribe(new Consumer<Integer>() {
-            @Override
-            public void accept(Integer integer) throws Exception {
-                Log.e(TAG, "accept : " + integer);
-            }
-        });
+Observable.just(1, 2, 2, 1, 3, 4, 3, 3).distinctUntilChanged().subscribe(new Consumer<Integer>() {
+    @Override
+    public void accept(Integer integer) throws Exception {
+        Log.e(TAG, "accept : " + integer);
+    }
+});
 ```
 
 ```java
@@ -1909,12 +1909,12 @@ Observable.create(new ObservableOnSubscribe<Integer>() {
 控制观察者接收事件的数量
 
 ```java
-        Observable.just(1, 2, 2, 1, 3, 4, 3, 3).take(3).subscribe(new Consumer<Integer>() {
-            @Override
-            public void accept(Integer integer) throws Exception {
-                Log.e(TAG, "accept : " + integer);
-            }
-        });
+Observable.just(1, 2, 2, 1, 3, 4, 3, 3).take(3).subscribe(new Consumer<Integer>() {
+    @Override
+    public void accept(Integer integer) throws Exception {
+        Log.e(TAG, "accept : " + integer);
+    }
+});
 ```
 
 ```java
@@ -1928,19 +1928,19 @@ Observable.create(new ObservableOnSubscribe<Integer>() {
 如果两个事件发送的时间间隔小于设定的时间间隔，则前一件事件不会发送给观察者
 
 ```java
- Observable.create(new ObservableOnSubscribe<Integer>() {
-            @Override
-            public void subscribe(ObservableEmitter<Integer> emitter) throws Exception {
-                emitter.onNext(1);
-                Thread.sleep(900);
-                emitter.onNext(2);
-            }
-        }).debounce(1, TimeUnit.SECONDS).subscribe(new Consumer<Integer>() {
-            @Override
-            public void accept(Integer integer) throws Exception {
-                Log.e(TAG, "accept : " + integer);
-            }
-        });
+Observable.create(new ObservableOnSubscribe<Integer>() {
+    @Override
+    public void subscribe(ObservableEmitter<Integer> emitter) throws Exception {
+        emitter.onNext(1);
+        Thread.sleep(900);
+        emitter.onNext(2);
+    }
+}).debounce(1, TimeUnit.SECONDS).subscribe(new Consumer<Integer>() {
+    @Override
+    public void accept(Integer integer) throws Exception {
+        Log.e(TAG, "accept : " + integer);
+    }
+});
 ```
 
 ```java
@@ -1952,12 +1952,12 @@ Observable.create(new ObservableOnSubscribe<Integer>() {
 `firstElement()` 取事件序列的第一个元素，`lastElement()` 取事件序列的最后一个元素
 
 ```java
-        Observable.just(1, 2, 3, 4, 5).firstElement().subscribe(new Consumer<Integer>() {
-            @Override
-            public void accept(Integer integer) throws Exception {
-                Log.e(TAG, "accept : " + integer);
-            }
-        });
+Observable.just(1, 2, 3, 4, 5).firstElement().subscribe(new Consumer<Integer>() {
+    @Override
+    public void accept(Integer integer) throws Exception {
+        Log.e(TAG, "accept : " + integer);
+    }
+});
 ```
 
 #### 6.10、elementAt() & elementAtOrError()
@@ -1965,12 +1965,12 @@ Observable.create(new ObservableOnSubscribe<Integer>() {
 `elementAt()` 可以指定取出事件序列中事件，但是输入的 `index` 超出事件序列的总数的话就不会触发任何调用，想触发异常信息的话就用 `elementAtOrError()` 
 
 ```java
-        Observable.just(1, 2, 3, 4, 5).elementAt(5).subscribe(new Consumer<Integer>() {
-            @Override
-            public void accept(Integer integer) throws Exception {
-                Log.e(TAG, "accept : " + integer);
-            }
-        });
+Observable.just(1, 2, 3, 4, 5).elementAt(5).subscribe(new Consumer<Integer>() {
+    @Override
+    public void accept(Integer integer) throws Exception {
+        Log.e(TAG, "accept : " + integer);
+    }
+});
 ```
 
 以上代码不会触发任何
@@ -1978,12 +1978,12 @@ Observable.create(new ObservableOnSubscribe<Integer>() {
 改用为 `elementAtOrError()`，则会抛出异常
 
 ```java
-        Observable.just(1, 2, 3, 4, 5).elementAtOrError(5).subscribe(new Consumer<Integer>() {
-            @Override
-            public void accept(Integer integer) throws Exception {
-                Log.e(TAG, "accept : " + integer);
-            }
-        });
+Observable.just(1, 2, 3, 4, 5).elementAtOrError(5).subscribe(new Consumer<Integer>() {
+    @Override
+    public void accept(Integer integer) throws Exception {
+        Log.e(TAG, "accept : " + integer);
+    }
+});
 ```
 
 ```java
@@ -2008,17 +2008,17 @@ Process: leavesc.hello.rxjavademo, PID: 13948
 判断事件序列是否全部满足某个事件，如果都满足则返回 `true`，反之则返回 `false`
 
 ```java
-        Observable.just(1, 2, 3, 4, 5).all(new Predicate<Integer>() {
-            @Override
-            public boolean test(Integer integer) throws Exception {
-                return integer % 2 == 0;
-            }
-        }).subscribe(new Consumer<Boolean>() {
-            @Override
-            public void accept(Boolean aBoolean) throws Exception {
-                Log.e(TAG, "accept: " + aBoolean);
-            }
-        });
+Observable.just(1, 2, 3, 4, 5).all(new Predicate<Integer>() {
+    @Override
+    public boolean test(Integer integer) throws Exception {
+        return integer % 2 == 0;
+    }
+}).subscribe(new Consumer<Boolean>() {
+    @Override
+    public void accept(Boolean aBoolean) throws Exception {
+        Log.e(TAG, "accept: " + aBoolean);
+    }
+});
 ```
 
 ```java
@@ -2031,16 +2031,16 @@ Process: leavesc.hello.rxjavademo, PID: 13948
 
 ````java
 Observable.just(1, 2, 3, 4, 5, 1, 2).takeWhile(new Predicate<Integer>() {
-            @Override
-            public boolean test(Integer integer) throws Exception {
-                return integer < 4;
-            }
-        }).subscribe(new Consumer<Integer>() {
-            @Override
-            public void accept(Integer integer) throws Exception {
-                Log.e(TAG, "accept: " + integer);
-            }
-        });
+    @Override
+    public boolean test(Integer integer) throws Exception {
+        return integer < 4;
+    }
+}).subscribe(new Consumer<Integer>() {
+    @Override
+    public void accept(Integer integer) throws Exception {
+        Log.e(TAG, "accept: " + integer);
+    }
+});
 ````
 
 ```java
@@ -2054,19 +2054,19 @@ Observable.just(1, 2, 3, 4, 5, 1, 2).takeWhile(new Predicate<Integer>() {
 订阅原始的 `Observable`，但是忽略它的发射物，直到指定的某个条件变为 false 时才开始发射原始 Observable
 
 ```java
-			Observable.just(1, 2, 4, 1, 3, 4, 5, 1, 5)
-                .skipWhile(new Predicate<Integer>() {
-                    @Override
-                    public boolean test(Integer integer) throws Exception {
-                        return integer < 3;
-                    }
-                })
-                .subscribe(new Consumer<Integer>() {
-                    @Override
-                    public void accept(Integer integer) throws Exception {
-                        Log.e(TAG, "integer " + integer);
-                    }
-                });
+Observable.just(1, 2, 4, 1, 3, 4, 5, 1, 5)
+    .skipWhile(new Predicate<Integer>() {
+        @Override
+        public boolean test(Integer integer) throws Exception {
+            return integer < 3;
+        }
+    })
+    .subscribe(new Consumer<Integer>() {
+        @Override
+        public void accept(Integer integer) throws Exception {
+            Log.e(TAG, "integer " + integer);
+        }
+    });
 ```
 
 ```java
@@ -2085,18 +2085,18 @@ Observable.just(1, 2, 3, 4, 5, 1, 2).takeWhile(new Predicate<Integer>() {
 
 ```java
 Observable.just(1, 2, 4, 1, 3, 4, 5, 1, 5)
-                .takeUntil(new Predicate<Integer>() {
-                    @Override
-                    public boolean test(Integer integer) throws Exception {
-                        return integer > 3;
-                    }
-                })
-                .subscribe(new Consumer<Integer>() {
-                    @Override
-                    public void accept(Integer integer) throws Exception {
-                        Log.e(TAG, "integer " + integer);
-                    }
-                });
+    .takeUntil(new Predicate<Integer>() {
+        @Override
+        public boolean test(Integer integer) throws Exception {
+            return integer > 3;
+        }
+    })
+    .subscribe(new Consumer<Integer>() {
+        @Override
+        public void accept(Integer integer) throws Exception {
+            Log.e(TAG, "integer " + integer);
+        }
+    });
 ```
 
 ```java
@@ -2111,28 +2111,28 @@ Observable.just(1, 2, 4, 1, 3, 4, 5, 1, 5)
 
 ```java
 Observable.intervalRange(1, 6, 0, 1, TimeUnit.SECONDS)
-                .skipUntil(Observable.intervalRange(10, 3, 1, 1, TimeUnit.SECONDS))
-                .subscribe(new Observer<Long>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
-                        Log.e(TAG, "onSubscribe");
-                    }
+    .skipUntil(Observable.intervalRange(10, 3, 1, 1, TimeUnit.SECONDS))
+    .subscribe(new Observer<Long>() {
+        @Override
+        public void onSubscribe(Disposable d) {
+            Log.e(TAG, "onSubscribe");
+        }
 
-                    @Override
-                    public void onNext(Long along) {
-                        Log.e(TAG, "onNext : " + along);
-                    }
+        @Override
+        public void onNext(Long along) {
+            Log.e(TAG, "onNext : " + along);
+        }
 
-                    @Override
-                    public void onError(Throwable e) {
-                        Log.e(TAG, "onError");
-                    }
+        @Override
+        public void onError(Throwable e) {
+            Log.e(TAG, "onError");
+        }
 
-                    @Override
-                    public void onComplete() {
-                        Log.e(TAG, "onComplete");
-                    }
-                });
+        @Override
+        public void onComplete() {
+            Log.e(TAG, "onComplete");
+        }
+    });
 ```
 
 ```java
@@ -2150,13 +2150,13 @@ Observable.intervalRange(1, 6, 0, 1, TimeUnit.SECONDS)
 判断两个 `Observable` 发送的事件是否相同，如果两个序列是相同的（相同的数据，相同的顺序，相同的终止状态），它就发射 true，否则发射 false
 
 ```java
-        Observable.sequenceEqual(Observable.just(1, 2, 3), Observable.just(1, 2, 3))
-                .subscribe(new Consumer<Boolean>() {
-                    @Override
-                    public void accept(Boolean aBoolean) throws Exception {
-                        Log.e(TAG, "accept aBoolean : " + aBoolean);
-                    }
-                });
+Observable.sequenceEqual(Observable.just(1, 2, 3), Observable.just(1, 2, 3))
+    .subscribe(new Consumer<Boolean>() {
+        @Override
+        public void accept(Boolean aBoolean) throws Exception {
+            Log.e(TAG, "accept aBoolean : " + aBoolean);
+        }
+    });
 ```
 
 ```java
@@ -2168,12 +2168,12 @@ Observable.intervalRange(1, 6, 0, 1, TimeUnit.SECONDS)
 判断事件序列中是否含有某个元素，如果有则返回 true，如果没有则返回 false
 
 ```java
-        Observable.just(1, 2, 3, 4).contains(2).subscribe(new Consumer<Boolean>() {
-            @Override
-            public void accept(Boolean aBoolean) throws Exception {
-                Log.e(TAG, "accept aBoolean : " + aBoolean);
-            }
-        });
+Observable.just(1, 2, 3, 4).contains(2).subscribe(new Consumer<Boolean>() {
+    @Override
+    public void accept(Boolean aBoolean) throws Exception {
+        Log.e(TAG, "accept aBoolean : " + aBoolean);
+    }
+});
 ```
 
 ```java
@@ -2185,17 +2185,17 @@ Observable.intervalRange(1, 6, 0, 1, TimeUnit.SECONDS)
 判断事件序列是否为空
 
 ```java
-        Observable.create(new ObservableOnSubscribe<Integer>() {
-            @Override
-            public void subscribe(ObservableEmitter<Integer> emitter) throws Exception {
-                emitter.onComplete();
-            }
-        }).isEmpty().subscribe(new Consumer<Boolean>() {
-            @Override
-            public void accept(Boolean aBoolean) throws Exception {
-                Log.e(TAG, "accept aBoolean: " + aBoolean);
-            }
-        });
+Observable.create(new ObservableOnSubscribe<Integer>() {
+    @Override
+    public void subscribe(ObservableEmitter<Integer> emitter) throws Exception {
+        emitter.onComplete();
+    }
+}).isEmpty().subscribe(new Consumer<Boolean>() {
+    @Override
+    public void accept(Boolean aBoolean) throws Exception {
+        Log.e(TAG, "accept aBoolean: " + aBoolean);
+    }
+});
 ```
 
 ```java
@@ -2207,15 +2207,15 @@ Observable.intervalRange(1, 6, 0, 1, TimeUnit.SECONDS)
 `amb()` 接收一个 `Observable` 集合，但是只会发送最先发送事件的 `Observable` 中的事件，不管发射的是一项数据还是一个 `onError` 或 `onCompleted` 通知，其余 `Observable` 将会被丢弃
 
 ```java
-        List<Observable<Long>> list = new ArrayList<>();
-        list.add(Observable.intervalRange(1, 3, 2, 1, TimeUnit.SECONDS));
-        list.add(Observable.intervalRange(10, 3, 0, 1, TimeUnit.SECONDS));
-        Observable.amb(list).subscribe(new Consumer<Long>() {
-            @Override
-            public void accept(Long aLong) throws Exception {
-                Log.e(TAG, "accept: " + aLong);
-            }
-        });
+List<Observable<Long>> list = new ArrayList<>();
+list.add(Observable.intervalRange(1, 3, 2, 1, TimeUnit.SECONDS));
+list.add(Observable.intervalRange(10, 3, 0, 1, TimeUnit.SECONDS));
+Observable.amb(list).subscribe(new Consumer<Long>() {
+    @Override
+    public void accept(Long aLong) throws Exception {
+        Log.e(TAG, "accept: " + aLong);
+    }
+});
 ```
 
 ```java
@@ -2229,17 +2229,17 @@ Observable.intervalRange(1, 6, 0, 1, TimeUnit.SECONDS)
 如果 Observable 没有发射任何值，则可以利用这个方法发送一个默认值
 
 ```java
-        Observable.create(new ObservableOnSubscribe<Integer>() {
-            @Override
-            public void subscribe(ObservableEmitter<Integer> emitter) throws Exception {
-                emitter.onComplete();
-            }
-        }).defaultIfEmpty(100).subscribe(new Consumer<Integer>() {
-            @Override
-            public void accept(Integer integer) throws Exception {
-                Log.e(TAG, "accept: " + integer);
-            }
-        });
+Observable.create(new ObservableOnSubscribe<Integer>() {
+    @Override
+    public void subscribe(ObservableEmitter<Integer> emitter) throws Exception {
+        emitter.onComplete();
+    }
+}).defaultIfEmpty(100).subscribe(new Consumer<Integer>() {
+    @Override
+    public void accept(Integer integer) throws Exception {
+        Log.e(TAG, "accept: " + integer);
+    }
+});
 ```
 
 ```java

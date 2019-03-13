@@ -12,8 +12,8 @@ ArrayList还实现了三个主要的接口： Collection、 List和 Random-Acces
 
 ArrayList还提供了两个返回 Iterator接口的方法：
 ``` Java
-public ListIterator < E > listIterator() 
-public ListIterator < E > listIterator( int index)
+public ListIterator <E> listIterator() 
+public ListIterator <E> listIterator(int index)
 ```
 ListIterator扩展了 Iterator接口，增加了一些方法，向前遍历、添加元素、修改元素、返回索引位置等。
 
@@ -63,7 +63,7 @@ Queue，所谓队列就类似于日常生活中的各种排队，特点就是先
 
 Deque接口还有一个迭代器方法，可以从后往前遍历：
 ``` Java
-Iterator < E > descendingIterator();
+Iterator <E> descendingIterator();
 ```
 
 简单总结下： LinkedList的用法是比较简单的，与 ArrayList用法类似，支持 List接口，只是， LinkedList增加了一个接口 Deque，可以把它看作队列、栈、双端队列，方便地在两端进行操作。
@@ -89,8 +89,8 @@ ArrayDeque的高效来源于 head和 tail这两个变量，它们使得物理上
 ArrayDeque  不允许元素为 null。ArrayDeque 的主要成员是一个 elements 数组和 int 的 head 与 tail 索引，head 是队列的头部元素索引，而 tail 是队列下一个要添加的元素的索引，elements 的默认容量是 16 且默认容量必须是 2 的幂次，不足 2 的幂次会自动向上调整为 2 的幂次。
 
 #### 特点
-1. 在两端添加、删除元素的效率很高，动态扩展需要的内存分配以及数组复制开销可以被平摊，具体来说，添加 N个元素的效率为 O（ N）。
-2. 根据元素内容查找和删除的效率比较低，为 O（ N）。
+1. 在两端添加、删除元素的效率很高，动态扩展需要的内存分配以及数组复制开销可以被平摊，具体来说，添加 N个元素的效率为 O（N）。
+2. 根据元素内容查找和删除的效率比较低，为 O（N）。
 3. 与 ArrayList和 LinkedList不同，没有索引位置的概念，不能根据索引位置进行操作。
 
 ### 总结

@@ -74,7 +74,7 @@
 
 ``` Java
 Shape shape = new Circle(); 
-shape. draw(); 
+shape.draw(); 
 ```
 
 shape 是抽象类 Shape类型的变量，引用了具体子类 Circle的对象，调用 draw() 方法将调用 Circle 的 draw代码。

@@ -1,10 +1,10 @@
 # Java编程的逻辑-异常&常用基础类
-1. try/ catch/ finally语法中， catch不是必需的，也就是可以只有 try/ finally，表示不捕获异常，异常自动向上传递，但 finally中的代码在异常发生后也执行。
+1. try/catch/finally语法中， catch不是必需的，也就是可以只有 try/ finally，表示不捕获异常，异常自动向上传递，但 finally中的代码在异常发生后也执行。
 2. finally语句有一个执行细节，如果在 try或者 catch语句内有 return语句，则 return语句在 finally语句执行结束后才执行，但 finally并不能改变返回值。
-3. 如果在 finally中也有 return语句呢？ try和 catch内的 return会丢失，实际会返回 finally中的返回值。 finally中有 return不仅会覆盖 try和 catch内的返回值，还会掩盖 try和 catch内的异常，就像异常没有发生一样。
+3. 如果在 finally中也有 return语句呢？ try和 catch内的 return会丢失，实际会返回 finally中的返回值。finally中有 return不仅会覆盖 try和 catch内的返回值，还会掩盖 try和 catch内的异常，就像异常没有发生一样。
 4. 所以，一般而言，为避免混淆，应该避免在 finally中使用 return语句或者抛出异常。
 
-Java 7开始支持一种新的语法，称之为 try-with-resources，这种语法针对实现了 java. lang. AutoCloseable接口的对象。`try( AutoCloseable r = new FileInputStream(" hello"))` ，资源 r 的声明和初始化放在 try语句内，不用再调用 finally，在语句执行完 try语句后，会自动调用资源的 close() 方法。
+Java 7开始支持一种新的语法，称之为 try-with-resources，这种语法针对实现了 java. lang. AutoCloseable接口的对象。`try(AutoCloseable r = new FileInputStream("hello"))` ，资源 r 的声明和初始化放在 try语句内，不用再调用 finally，在语句执行完 try语句后，会自动调用资源的 close() 方法。
 
 ## 包装类
 1. 每种包装类都有一个静态方法 valueOf()，接受基本类型，返回引用类型，也都有一个实例方法 xxxValue()返回对应的基本类型。

@@ -17,7 +17,7 @@ class Model {
 	private boolean failure; 
 /** * 覆盖toString方法，使用Java 8 的StringJoiner */ 
 	@Override public String toString() { 
-		return new StringJoiner(", ", Model.class.getSimpleName() 		+ "[","]") .add("success=" + success) .add("failure=" + 		failure) .toString(); 
+		return new StringJoiner(", ", Model.class.getSimpleName() + "[","]").add("success=" + success).add("failure=" + failure) .toString(); 
 	} 
 }
 ```

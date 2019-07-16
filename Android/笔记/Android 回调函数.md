@@ -2,12 +2,12 @@
 
 因为android回调中最常见的是Button的点击事件的回调，这里以此为参照：
 
-1、在A类中定义一个接口：需要我们在类中定义出一个接口，并且给这个接口定义出一个抽象方法，就像下面这样：
+1、定义一个接口：需要我们在类中定义出一个接口，并且给这个接口定义出一个抽象方法，就像下面这样：
 
 ``` Java
-public interface CallBack{
-        public abstract void work()
-    }
+public interface C {
+    public void onCallBack(String textstring);
+}
 ```
 
 以下是View.java类中定义的响应点击事件的接口：
@@ -26,10 +26,22 @@ public interface CallBack{
     }
 ```
 
-2、在A类中定义出该接口的一个成员变量：
+2、在B类中定义出该接口的一个成员变量：
 
 ``` Java
-public CallBack mCallBack
+public class B {
+
+    private C c;
+
+    public void setCallBack(C c) {
+        this.c = c;
+    }
+
+    public void Call() {
+        String string = "你好，我是B！";
+        this.c.onCallBack(string);
+    }
+}
 ```
 
 以下是View.java类中获取点击事件接口成员变量的源码：
@@ -43,12 +55,12 @@ public CallBack mCallBack
 public OnClickListener mOnClickListener;
 ```
 
-3、在A类中定义出一个公共方法，可以用来设置这个接口的对象，调用该方法可以给接口对象变量赋值：
+3、在B类中定义出一个公共方法，可以用来设置这个接口的对象，调用该方法可以给接口对象变量赋值：
 
 ``` Java
-public void setCallBack(CallBack callBack) {    
-    this.mCallBack = callBack;    
-}
+public void setCallBack(C c) {
+        this.c = c;
+    }
 ```
 
 以下是 setOnClickListener(OnClickListener l) 的源码：
@@ -72,12 +84,13 @@ public void setOnClickListener(@Nullable OnClickListener l) {
 
 最后一步
 
-4、在A类中调用接口对象中的方法：
+4、在B类中调用接口对象中的方法：
 
 ``` Java
-public void doWork(){
-   mCallBack.work();
-}
+ public void Call() {
+        String string = "你好，我是B！";
+        this.c.onCallBack(string);
+    }
 ```
 
 在View.java中的体现：
@@ -103,52 +116,39 @@ public boolean performClick() {
     }
 ```
 
-这里附上整个项目的代码，这里A类映射到实际中使用Employee这个类来代表：
+这里附上整个项目的代码：
 
 ``` Java
-public class Employee {
-    /*
-     * 定义回调接口的成员变量
-     */
-    private CallBack mCallBack;
+public class A implements C {
 
-    /*
-     * 声明回调接口
-     */
-    public interface CallBack{
-        void work();
+    public static void main(String args[]) {
+        B b = new B();
+        b.setCallBack(new A());
+        b.Call();
     }
-    /*
-     * 设置回调接口对象成员变量
-     */
-    public void setCallBack(CallBack callBack) {
-        this.mCallBack = callBack;
-    }
-    /*
-     * 调用回调接口对象中的方法
-     */
-    public void doWork() {
-        mCallBack.work();
+
+    @Override
+    public void onCallBack(String textstring) {
+        System.out.println(textstring);
     }
 }
-```
 
-我们在定义出一个B类，就用Boss类吧：
+public class B {
 
-``` Java
-public class Boos {
-    private Employee employee = new Employee();
-    /*
-     * 为Employee设置回调函数, 在这里定义具体的回调方法
-     */
-    public void setCallback() {
-        employee.setCallBack(() -> System.out.println("this is the work"));
-        employee.doWork();
+    private C c;
+
+    public void setCallBack(C c) {
+        this.c = c;
     }
 
-    public static void main(String[] args) {
-        new Boos().setCallback();
+    public void Call() {
+        String string = "你好，我是B！";
+        this.c.onCallBack(string);
     }
+}
+
+public interface C {
+    public void onCallBack(String textstring);
 }
 ```
 

@@ -315,3 +315,53 @@ t1.start(）
 [1]:	https://juejin.im/post/5b1e36476fb9a01e4a6e02e4
 
 [image-1]:	https://ws2.sinaimg.cn/large/006tNbRwly1fy58tm5rfbj31ey0kcju1.jpg
+
+## 线程间的通信和获取返回值
+最近遇到一个需求，我需要再自动化的同时，启动一个线程来获取内存等性能数据，想了一下应该很简单，毕竟之前也搞过多线程和多进程的，包括拿返回值，都有过经验。
+开始写之后，还是遇到了没有想到的一个问题，就是我的每条用例，再执行的时候，需要通知另外的一个线程来开始启动任务，然后等用例结束了，还需要让线程停止，并把拿到的数据给我，之前用JAVA实现过类似的需求，也就按照JAVA的想法，写了一下，发现不行，启动之后，试了几种方式，比如类属性之类的，都没有办法让线程停止，也咨询了一下同事，没有得到理想的结果，最后发现了 `threading.Event()`，解决了我的问题，这里也记录一下。
+
+首先，将要执行的任务，也就是传递给 Thread 时候的 target 参数所对应的方法，修改一下，如下：
+
+``` Python
+    def get_total_pss(event):
+        event.wait()
+        while event.isSet():
+            # 要执行的具体任务
+```
+
+省略了不必要的代码，传递一个 event 参数，调用参数的 event.wait()，然后通过判断 event 的标志位是否是 True 来控制任务的开始和结束。
+
+下面，来了另一个问题，Thread 我不能调用 return 的方法，也就是说我没有办法拿到执行的结果啊，当然有很多的解决方案，比如使用 futures 库，或者可以在执行过程中把结果存到一个文件，然后再处理文件，但是我觉得这些都有点麻烦，不过直接，然后我又发现了这个方法，如下：
+
+``` Python
+    def get_total_pss(event, queue):
+        pss_list = []
+        event.wait()
+        while event.isSet():
+             # 要执行的具体任务
+        queue.put(pss_list)
+```
+
+使用 Queue 来记录执行的结果，然后执行结束后，再从 Queue 里面拿出来。
+最后，我写了一个装饰器，如下：
+
+``` Python
+    def save_perf_value(func):
+        def wrapper(*args, **kw):
+            event = threading.Event()
+            queue = Queue()
+            memory_thread = threading.Thread(target=GetPerformance.get_total_pss, name="memory_thread",
+                                             args=(event, queue))
+            memory_thread.start()
+            event.set()
+            func(*args, **kw)
+            event.clear()
+            pss = queue.get()
+            case_name = func.__name__.replace("test_", "")
+            with open(TestMemory.get_result_file_path(), "a") as m:
+                m.write(f"{case_name}: {TestMemory.get_average_num(pss)}" + "\n")
+
+        return wrapper
+```
+
+这样，就实现了我的需求，而且代码量很小，效果还不错，不过也遇到了一个问题，就是我的 get_total_pss 这个方法，本来是个实例方法，第一个参数是 self，然后我执行自动化测试，结果会报错，说 get_total_pss 这个方法，缺少 queue 参数，我觉得应该是第一个 self 参数的问题，然后我改了一下，去掉 self 参数，也就是不需要自身的实例，然后就好了，这个我还没有找到具体的原因，后面还是需要再研究一下。

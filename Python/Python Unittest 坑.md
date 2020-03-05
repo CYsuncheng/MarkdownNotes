@@ -1,0 +1,3 @@
+## discover的代码逻辑
+1. unitTest中的 discover 第三个参数 top_level_dir 第一次运行时如果为None 会取当前传入的start_dir所在路径为 top_level_dir
+2. 而这个top_level_dir会作为self的参数保存下来，这样第二次运行时 top_level_dir实际取的是上一次的路径，直接影响到了下一次的运行

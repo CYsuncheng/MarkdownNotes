@@ -38,7 +38,7 @@
 
 完整的示例代码如下所示
 
-```java
+``` Java
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
@@ -104,7 +104,7 @@ public class MainActivity extends AppCompatActivity {
 
 程序运行后的日志如下所示，可以看出各个方法在调用时所处的线程
 
-```java
+``` Java
 06-22 02:51:41.779 21977-21977/com.leavesc.myapplication E/MainActivity: onCreate 当前线程名：main   当前线程ID：2
 06-22 02:51:44.927 21977-21995/com.leavesc.myapplication E/MainActivity: ChildCallback 当前线程名：HandlerThread   当前线程ID：497
 06-22 02:51:44.928 21977-21995/com.leavesc.myapplication E/MainActivity: 耗时任务开始
@@ -118,13 +118,13 @@ public class MainActivity extends AppCompatActivity {
 
 Thread 的子类
 
-```java
+``` Java
 	public class HandlerThread extends Thread
 ```
 
 两个构造函数，可以传入的参数分别是**线程名**和**线程优先级**
 
-```java
+``` Java
 	public HandlerThread(String name) {
         super(name);
         //使用默认的线程优先级
@@ -140,7 +140,7 @@ Thread 的子类
 
 看下其 `run()` 方法
 
-```java
+``` Java
 	@Override
     public void run() {
         mTid = Process.myTid();
@@ -166,7 +166,7 @@ Thread 的子类
 
 之后可以看到有一个同步代码块，在当中调用了 `notifyAll()`来唤醒等待线程，那该唤醒的又是哪个线程呢？这里需要明确各个方法是运行于哪个线程，`run()` 方法肯定是运行于子线程，但用于向 HandlerThread 下发任务的 Handler 是初始化于主线程，因此 `getLooper()`方法也是运行于主线程的。由于是两个不同的线程，`run()` 方法和 `getLooper()` 的运行先后顺序是不明确的，因此 `getLooper()` 方法需要确保 Looper 对象不为 **null** 时才返回，否则将一直阻塞等待 Looper 对象初始化完成
 
-```java
+``` Java
 	//获取与当前线程关联的 Looper 对象
     //因为 getLooper() 方法可能先于 run() 被调用，此时就需要先等待 Looper 对象被创建
     public Looper getLooper() {
@@ -193,7 +193,7 @@ Looper 对象初始化完成后，就需要调用 `Looper.loop()` 来开启消�
 
 最后再贴一下 HandlerThread 的完整源码注释
 
-```java
+``` Java
 package android.os;
 
 import android.annotation.NonNull;

@@ -18,6 +18,3 @@
 > adb shell am clear-debug-app
 
 这个调试的方法很简单，但是可能会节省我们很多的宝贵时间。
-
-
-
